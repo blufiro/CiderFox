@@ -1,16 +1,30 @@
 ﻿using UnityEngine;
+using System.Collections;
 
-public sealed class Direction
+[System.Serializable]
+public struct Direction
 {
-	public static Direction NONE = new Direction(0.0f, 0.0f);
-	public static Direction UP = new Direction(0.0f, -1.0f);
-	public static Direction UP_LEFT = new Direction(-1.0f, -1.0f);
-	public static Direction UP_RIGHT = new Direction(1.0f, -1.0f);
-	public static Direction LEFT = new Direction(-1.0f, 0.0f);
-	public static Direction RIGHT = new Direction(1.0f, 0.0f);
-	public static Direction DOWN = new Direction(0.0f, 1.0f);
-	public static Direction DOWN_LEFT = new Direction(-1.0f, 1.0f);
-	public static Direction DOWN_RIGHT = new Direction(1.0f, 1.0f);
+	public static Direction NONE = new Direction(0, 0.0f, 0.0f);
+	public static Direction UP = new Direction(1, 0.0f, -1.0f);
+	public static Direction UP_LEFT = new Direction(2, -1.0f, -1.0f);
+	public static Direction UP_RIGHT = new Direction(3, 1.0f, -1.0f);
+	public static Direction LEFT = new Direction(4, -1.0f, 0.0f);
+	public static Direction RIGHT = new Direction(5, 1.0f, 0.0f);
+	public static Direction DOWN = new Direction(6, 0.0f, 1.0f);
+	public static Direction DOWN_LEFT = new Direction(7, -1.0f, 1.0f);
+	public static Direction DOWN_RIGHT = new Direction(8, 1.0f, 1.0f);
+
+	private static Direction[] directionsArray = new Direction[9] {
+		NONE,
+		UP,
+		UP_LEFT,
+		UP_RIGHT,
+		LEFT,
+		RIGHT,
+		DOWN,
+		DOWN_LEFT,
+		DOWN_RIGHT,
+	};
 
 	public static Direction get(Vector2 vector) {
 		return get(vector, 0.0f);
@@ -30,18 +44,29 @@ public sealed class Direction
 		else return NONE;
 	}
 
-	private Vector2 xy;
-	private Vector3 xyz;
-	private Direction(float x, float y) {
-		xy = new Vector2(x,y);
-		xyz = new Vector3(x,y,0);
+	public static Direction fromInt(int index) {
+		return directionsArray[index];
+	}
+
+	[SerializeField]
+	private int m_index;
+	private Vector2 m_xy;
+	private Vector3 m_xyz;
+	private Direction(int index, float x, float y) {
+		m_index = index;
+		m_xy = new Vector2(x,y);
+		m_xyz = new Vector3(x,y,0);
+	}
+
+	public int toInt() {
+		return m_index;
 	}
 
 	public Vector2 toVector2() {
-		return xy;
+		return m_xy;
 	}
 
 	public Vector3 toVector3() {
-		return xyz;
+		return m_xyz;
 	}
 }
