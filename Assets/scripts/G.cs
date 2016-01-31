@@ -16,6 +16,7 @@ public class G
 	public int ARROW_DAMAGE = 1;
 	public float PLAYER_MOVE_SPEED = 100.0f/60.0f; // pixels per second
 	public int MAX_SPAWN_ATTEMPTS = 5;
+	public float LIGHT_OFF_DELAY = 5.0f; //seconds
 
 	private static G instance = new G();
 	public static G get() {

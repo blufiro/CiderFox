@@ -13,7 +13,7 @@ public class ArrowBehaviour : MonoBehaviour {
 	
 	}
 
-	void OnCollisionEnter(Collision collision) {
+	void OnCollisionEnter2D(Collision2D collision) {
 		var hit = collision.gameObject;
 		var hitEnemy = hit.GetComponent<EnemyBehaviour>();
 		if (hitEnemy != null) {
