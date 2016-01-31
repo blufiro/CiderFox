@@ -6,31 +6,36 @@ public class BreweryBehaviour : NetworkBehaviour {
 
 	public GameObject ciderPrefab;
 
-	private IEnumerator infiniteProduceCoroutine;
+	private bool prevSpawnedCiderExists;
+	private float produceTimeElapsed;
+	private Vector3 produceSpawnPosition;
 
 	public override void OnStartServer()
     {
-		infiniteProduceCoroutine = ProduceCider();
-		StartCoroutine(infiniteProduceCoroutine);
+		produceTimeElapsed = 0;
+		float breweryHalfHeight = GetComponent<SpriteRenderer>().sprite.texture.height / 2.0f;
+		produceSpawnPosition = transform.position + new Vector3(0, -breweryHalfHeight, 0);
     }
 
-    void OnDestroy() {
-		StopCoroutine(infiniteProduceCoroutine);
-    }
+    void Update() {
+    	if (!isServer)
+    		return;
 
-    IEnumerator ProduceCider() {
-    	// Should never be called on client
-    	if (!isServer) {
-    		yield return null;
+		if (prevSpawnedCiderExists) {
+    		// do nothing
     	} else {
-	    	while (true) {
-	    		
-				Vector3 spawnPos = transform.position;
-				GameObject gameObject = (GameObject) Instantiate(ciderPrefab, spawnPos, Quaternion.identity);
-				NetworkServer.Spawn(gameObject);
-
-				yield return new WaitForSeconds(G.get().CIDER_PRODUCE_DELAY);
+	    	produceTimeElapsed -= Time.deltaTime;
+	    	if (produceTimeElapsed <= 0) {
+				GameObject spawned = (GameObject) Instantiate(
+					ciderPrefab, produceSpawnPosition, Quaternion.identity);
+				spawned.GetComponent<ItemBehaviour>().OnTaken += OnCiderTaken;
+				NetworkServer.Spawn(spawned);
+				produceTimeElapsed = G.get().CIDER_PRODUCE_DELAY;
 			}
 		}
+    }
+
+    void OnCiderTaken() {
+		prevSpawnedCiderExists = false;
     }
 }
