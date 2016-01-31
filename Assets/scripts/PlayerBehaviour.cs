@@ -74,22 +74,6 @@ public class PlayerBehaviour : NetworkBehaviour {
 			}
 			transform.Translate(moveVec);
 		}
-
-//		var x = Input.GetAxis("Horizontal");
-//		var y = Input.GetAxis("Vertical");
-//		transform.Translate(x, y, 0);
-//
-//		Direction newFacing = Direction.get(new Vector2(x,y));
-//		if (newFacing.toInt() != Direction.NONE.toInt()
-//			&& newFacing.toInt() != networkFacing) {
-//			CmdUpdateFacing(newFacing.toInt());
-//		}
-//
-//		if (Input.GetKeyDown(KeyCode.Space))
-//        {
-//        	// Called from the client but invoked on the server.
-//            CmdFire();
-//        }
 	}
 
 	public override void OnStartServer() {
@@ -99,6 +83,14 @@ public class PlayerBehaviour : NetworkBehaviour {
 	}
 
 	public override void OnStartLocalPlayer() {
+		var smoothCam = Camera.main.GetComponent<SmoothCamera2D>();
+		smoothCam.target = this.transform;
+		smoothCam.bounds = new Rect(
+			-G.HALF_WORLD_WIDTH + G.HALF_SCREEN_WIDTH,
+			-G.HALF_WORLD_HEIGHT + G.HALF_SCREEN_HEIGHT,
+			G.WORLD_WIDTH - G.SCREEN_WIDTH,
+			G.WORLD_HEIGHT - G.SCREEN_HEIGHT);
+
         GetComponent<SpriteRenderer>().material.color = Color.red;
     }
 

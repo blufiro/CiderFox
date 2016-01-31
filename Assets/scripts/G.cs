@@ -2,8 +2,12 @@
 
 public class G
 {
-	public const int WORLD_WIDTH = 640;
-	public const int WORLD_HEIGHT = 360;
+	public const int SCREEN_WIDTH = 640;
+	public const int SCREEN_HEIGHT = 360;
+	public const int HALF_SCREEN_WIDTH = SCREEN_WIDTH / 2;
+	public const int HALF_SCREEN_HEIGHT = SCREEN_HEIGHT / 2;
+	public const int WORLD_WIDTH = 1280;
+	public const int WORLD_HEIGHT = 720;
 	public const int HALF_WORLD_WIDTH = WORLD_WIDTH / 2;
 	public const int HALF_WORLD_HEIGHT = WORLD_HEIGHT / 2;
 

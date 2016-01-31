@@ -27,7 +27,6 @@ public struct Direction
 	};
 
 	private static float directionAngleRadians = Mathf.PI * 2.0f / 8.0f;
-	private static float directionHalfAngle = directionAngleRadians / 2.0f;
 
 	public static Direction get(Vector2 vector) {
 		float angleRadians = Mathf.Atan2(-vector.y, vector.x);
