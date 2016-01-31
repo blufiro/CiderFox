@@ -29,12 +29,12 @@ public struct Direction
 	private static float directionAngleRadians = Mathf.PI * 2.0f / 8.0f;
 
 	public static Direction get(Vector2 vector) {
-		float angleRadians = Mathf.Atan2(-vector.y, vector.x);
+		float angleRadians = Mathf.Atan2(vector.y, vector.x);
 		int angleIndex = (int) Mathf.Round(angleRadians / directionAngleRadians);
 		// Wrap around
 		if (angleIndex < 0)
 			angleIndex += 8;
-		Debug.Log("Direction vector " + vector+" angle: " + angleRadians + " angleIndx: " + angleIndex);
+		// Debug.Log("Direction vector " + vector+" angle: " + angleRadians + " angleIndx: " + angleIndex);
 
 		// + 1 because array starts with NONE
 		return directionsArray[angleIndex + 1];

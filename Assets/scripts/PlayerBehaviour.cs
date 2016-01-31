@@ -17,6 +17,7 @@ public class PlayerBehaviour : NetworkBehaviour {
 	// private GameObject world;
 	private Vector3 tapBegin;
 	private bool isAiming;
+	private Animator animator;
 
 
 	// Use this for initialization
@@ -72,14 +73,19 @@ public class PlayerBehaviour : NetworkBehaviour {
 				toDestination.Normalize();
 				moveVec = toDestination * G.get().PLAYER_MOVE_SPEED;
 			}
-			transform.Translate(moveVec);
+			walk(moveVec);
 		}
 	}
 
 	public override void OnStartServer() {
+		animator = GetComponent<Animator>();
 		if (isServer) {
 			networkFacing = facing.toInt();
 		}
+	}
+
+	public override void OnStartClient() {
+		animator = GetComponent<Animator>();
 	}
 
 	public override void OnStartLocalPlayer() {
@@ -121,14 +127,12 @@ public class PlayerBehaviour : NetworkBehaviour {
     }
 
     private void walk(Vector2 moveVec) {
-		Debug.Log("moving... " + moveVec.x + "," + moveVec.y);
-
 		transform.Translate(moveVec);
 		Direction newFacing = Direction.get(moveVec);
 		lazyUpdateFacing(newFacing);
     }
     private void lazyUpdateFacing(Direction newFacing) {
-    	if (newFacing.toInt() != Direction.NONE.toInt()
+		if (newFacing.toInt() != Direction.NONE.toInt()
     		&& networkFacing != newFacing.toInt()) {
     		CmdUpdateFacing(newFacing.toInt());
     	}
@@ -139,11 +143,14 @@ public class PlayerBehaviour : NetworkBehaviour {
 		Debug.Log("update facing newFacing: " + newFacing + " from : " + networkFacing);
     	networkFacing = newFacing;
     	facing = Direction.fromInt(networkFacing);
+		animator.SetInteger("Direction", networkFacing);
+
     }
 
     [Client]
 	void FacingChanged(int newFacing) {
 		facing = Direction.fromInt(newFacing);
+		animator.SetInteger("Direction", newFacing);
 	}
 
 	[Command]
