@@ -32,14 +32,4 @@ public class EnemyBehaviour : NetworkBehaviour {
 			Destroy(gameObject);
 		}
 	}
-
-//	[ClientRpc]
-//    void RpcRespawn()
-//    {
-//        if (isLocalPlayer)
-//        {
-//            // move back to zero location
-//            transform.position = Vector3.zero;
-//        }
-//    }
 }

@@ -3,16 +3,6 @@ using System.Collections;
 
 public class ArrowBehaviour : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
 	void OnCollisionEnter2D(Collision2D collision) {
 		var hit = collision.gameObject;
 		var hitEnemy = hit.GetComponent<EnemyBehaviour>();

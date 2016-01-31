@@ -17,6 +17,8 @@ public class G
 	public float PLAYER_MOVE_SPEED = 100.0f/60.0f; // pixels per second
 	public int MAX_SPAWN_ATTEMPTS = 5;
 	public float LIGHT_OFF_DELAY = 5.0f; //seconds
+	public float CIDER_PRODUCE_DELAY = 30.0f; // seconds
+	public int CARRY_OVERHEAD_OFFSET_Y = 4; // pixels
 
 	private static G instance = new G();
 	public static G get() {

@@ -14,7 +14,7 @@ public class PlayerBehaviour : NetworkBehaviour {
 	[SyncVar]
 	private Vector2 destination;
 
-	private GameObject world;
+	// private GameObject world;
 	private Vector3 tapBegin;
 	private bool isAiming;
 
@@ -22,7 +22,7 @@ public class PlayerBehaviour : NetworkBehaviour {
 	// Use this for initialization
 	void Start () {
 		facing = Direction.DOWN;
-		world = GameObject.Find("World");
+		// world = GameObject.Find("World");
 		// transform.parent = world.transform;
 		Input.simulateMouseWithTouches = true;
 	}

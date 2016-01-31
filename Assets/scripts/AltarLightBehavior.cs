@@ -18,8 +18,7 @@ public class AltarLightBehavior : NetworkBehaviour {
 	}
 
 	IEnumerator SwitchOff() {
-		float delay = G.get().LIGHT_OFF_DELAY;
-		yield return new WaitForSeconds(delay);
+		yield return new WaitForSeconds(G.get().LIGHT_OFF_DELAY);
 
 		RpcLightChanged(false);
 	}
