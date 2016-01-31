@@ -1,15 +1,12 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 
-public class AltarBehavior : MonoBehaviour {
+public class AltarBehavior : NetworkBehaviour {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+	int numCiders = 0;
+	void OnReceiveItem() {
+		numCiders++;
+		Debug.Log("numCiders: " + numCiders);
 	}
 }

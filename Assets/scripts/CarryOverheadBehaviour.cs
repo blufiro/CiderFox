@@ -7,6 +7,8 @@ public class CarryOverheadBehaviour : NetworkBehaviour {
 	[SyncVar]
 	private bool isCarryingItem;
 
+	private GameObject carryingItem;
+
 	// Returns true if taken, false otherwise.
 	public bool TakeItem(ItemBehaviour item) {
 		if (!isServer)
@@ -18,7 +20,7 @@ public class CarryOverheadBehaviour : NetworkBehaviour {
 		// start carrying the item;
 		float spriteOffset = G.get().CARRY_OVERHEAD_OFFSET_Y + 
 			gameObject.GetComponent<SpriteRenderer>().sprite.texture.height / 2.0f;
-		GameObject carryingItem = (GameObject) Instantiate(item.itemIconPrefab);
+		carryingItem = (GameObject) Instantiate(item.itemIconPrefab);
 		carryingItem.transform.parent = transform;
 		carryingItem.transform.localPosition = new Vector3(0.0f, spriteOffset, 0.0f);
 		NetworkServer.Spawn(carryingItem);
@@ -28,17 +30,15 @@ public class CarryOverheadBehaviour : NetworkBehaviour {
 		return true;
 	}
 
-	public bool HasCarriedItem() {
+	public bool IsCarryingItem() {
 		return isCarryingItem;
 	}
 
-	public bool PutCarriedItem() {
+	public void RemoveCarriedItem() {
 		if (!isServer)
-			return false;
-		if (!isCarryingItem)
-			return false;
-		// TODO
+			return;
 
-		return true;
+		isCarryingItem = false;
+		Destroy(carryingItem);
 	}
 }
