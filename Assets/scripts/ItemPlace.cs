@@ -4,7 +4,7 @@ using System.Collections;
 
 public class ItemPlace : NetworkBehaviour {
 
-	void OnCollisionEnter2D(Collision2D collision) {
+	void OnTriggerEnter2D(Collider2D collision) {
 		if (!isServer) 
 			return;
 
@@ -26,7 +26,5 @@ public class ItemPlace : NetworkBehaviour {
 		itemBearer.RemoveCarriedItem();
 		// TODO (can send over item id)
 		gameObject.SendMessage("OnReceiveItem");
-
-		Destroy(gameObject);
 	}
 }
