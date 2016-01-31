@@ -5,43 +5,40 @@ using System.Collections;
 public struct Direction
 {
 	public static Direction NONE = new Direction(0, 0.0f, 0.0f);
-	public static Direction UP = new Direction(1, 0.0f, -1.0f);
-	public static Direction UP_LEFT = new Direction(2, -1.0f, -1.0f);
-	public static Direction UP_RIGHT = new Direction(3, 1.0f, -1.0f);
-	public static Direction LEFT = new Direction(4, -1.0f, 0.0f);
-	public static Direction RIGHT = new Direction(5, 1.0f, 0.0f);
-	public static Direction DOWN = new Direction(6, 0.0f, 1.0f);
-	public static Direction DOWN_LEFT = new Direction(7, -1.0f, 1.0f);
+	public static Direction RIGHT = new Direction(1, 1.0f, 0.0f);
+	public static Direction UP_RIGHT = new Direction(2, 1.0f, -1.0f);
+	public static Direction UP = new Direction(3, 0.0f, -1.0f);
+	public static Direction UP_LEFT = new Direction(4, -1.0f, -1.0f);
+	public static Direction LEFT = new Direction(5, -1.0f, 0.0f);
+	public static Direction DOWN_LEFT = new Direction(6, -1.0f, 1.0f);
+	public static Direction DOWN = new Direction(7, 0.0f, 1.0f);
 	public static Direction DOWN_RIGHT = new Direction(8, 1.0f, 1.0f);
 
 	private static Direction[] directionsArray = new Direction[9] {
 		NONE,
+		RIGHT,
+		UP_RIGHT,
 		UP,
 		UP_LEFT,
-		UP_RIGHT,
 		LEFT,
-		RIGHT,
-		DOWN,
 		DOWN_LEFT,
-		DOWN_RIGHT,
+		DOWN,
+		DOWN_RIGHT
 	};
 
-	public static Direction get(Vector2 vector) {
-		return get(vector, 0.0f);
-	}
+	private static float directionAngleRadians = Mathf.PI * 2.0f / 8.0f;
+	private static float directionHalfAngle = directionAngleRadians / 2.0f;
 
-	public static Direction get(Vector2 vector, float minThreshold) {
-		if (vector.x < minThreshold)
-			if (vector.y < minThreshold) return UP_LEFT;
-			else if (vector.y > minThreshold) return DOWN_LEFT;
-			else return LEFT;
-		else if (vector.x > minThreshold)
-			if (vector.y < minThreshold) return UP_RIGHT;
-			else if (vector.y > minThreshold) return DOWN_RIGHT;
-			else return RIGHT;
-		else if (vector.y < minThreshold) return UP;
-		else if (vector.y > minThreshold) return DOWN;
-		else return NONE;
+	public static Direction get(Vector2 vector) {
+		float angleRadians = Mathf.Atan2(-vector.y, vector.x);
+		int angleIndex = (int) Mathf.Round(angleRadians / directionAngleRadians);
+		// Wrap around
+		if (angleIndex < 0)
+			angleIndex += 8;
+		Debug.Log("Direction vector " + vector+" angle: " + angleRadians + " angleIndx: " + angleIndex);
+
+		// + 1 because array starts with NONE
+		return directionsArray[angleIndex + 1];
 	}
 
 	public static Direction fromInt(int index) {
