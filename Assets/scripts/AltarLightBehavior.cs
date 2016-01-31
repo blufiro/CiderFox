@@ -7,6 +7,8 @@ public class AltarLightBehavior : NetworkBehaviour {
 	public Sprite lightOn;
 	public Sprite lightOff;
 
+	private bool m_isOn;
+
 	public void SwitchOn() {
 		if (!isServer) {
 			return;
@@ -32,6 +34,11 @@ public class AltarLightBehavior : NetworkBehaviour {
 
 	[ClientRpc]
 	void RpcLightChanged(bool value) {
+		m_isOn = value;
 		GetComponent<SpriteRenderer>().sprite = (value) ? lightOn : lightOff;
+	}
+
+	public bool isOn() {
+		return m_isOn;
 	}
 }

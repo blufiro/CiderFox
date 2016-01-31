@@ -1,9 +1,10 @@
 fileFormatVersion: 2
 guid: 3dbd5d7d7356dcd43919a8b221259195
-timeCreated: 1454270203
+timeCreated: 1454276035
 licenseType: Free
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: god instructions_0
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -30,7 +31,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     filterMode: -1
-    aniso: -1
+    aniso: 16
     mipBias: -1
     wrapMode: 1
   nPOTScale: 0
@@ -43,13 +44,56 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 100
+  spriteBorder: {x: 65, y: 22, z: 65, w: 22}
+  spritePixelsToUnits: 1
   alphaIsTransparency: 1
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites: []
+    sprites:
+    - name: god instructions_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 942
+        height: 104
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 50, y: 21, z: 50, w: 21}
+      outline:
+      - - {x: 440, y: -41}
+        - {x: 450, y: -39}
+        - {x: 464, y: -52}
+        - {x: 471, y: -52}
+        - {x: 471, y: -48}
+        - {x: 467, y: -40}
+        - {x: 457, y: -28}
+        - {x: 461, y: -19}
+        - {x: 462, y: 19}
+        - {x: 458, y: 28}
+        - {x: 471, y: 48}
+        - {x: 471, y: 52}
+        - {x: 465, y: 52}
+        - {x: 454, y: 43}
+        - {x: 439, y: 44}
+        - {x: -438, y: 43}
+        - {x: -440, y: 41}
+        - {x: -452, y: 41}
+        - {x: -466, y: 52}
+        - {x: -471, y: 52}
+        - {x: -471, y: 47}
+        - {x: -457, y: 28}
+        - {x: -461, y: 18}
+        - {x: -461, y: -20}
+        - {x: -458, y: -31}
+        - {x: -468, y: -44}
+        - {x: -471, y: -47}
+        - {x: -471, y: -52}
+        - {x: -463, y: -52}
+        - {x: -448, y: -38}
+        - {x: -439, y: -44}
+        - {x: 438, y: -43}
     outline: []
   spritePackingTag: 
   userData: 
