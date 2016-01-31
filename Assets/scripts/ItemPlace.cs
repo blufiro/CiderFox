@@ -10,6 +10,7 @@ public class ItemPlace : NetworkBehaviour {
 
 		var hitItemBearer = collision.gameObject.GetComponent<CarryOverheadBehaviour>();
 		if (hitItemBearer != null) {
+			Debug.Log("hit carry overhaeed");
 			if (!hitItemBearer.IsCarryingItem())
 				return;
 			TakeCarriedItem(hitItemBearer);
@@ -20,8 +21,12 @@ public class ItemPlace : NetworkBehaviour {
 		if (!isServer) {
 			return;
 		}
+
+		Debug.Log("TakeCarriedItem");
 		itemBearer.RemoveCarriedItem();
 		// TODO (can send over item id)
 		gameObject.SendMessage("OnReceiveItem");
+
+		Destroy(gameObject);
 	}
 }
