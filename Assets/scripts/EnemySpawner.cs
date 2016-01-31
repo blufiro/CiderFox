@@ -20,7 +20,7 @@ public class EnemySpawner : NetworkBehaviour {
             var rotation = Quaternion.identity; //Euler( Random.Range(0,180), Random.Range(0,180), Random.Range(0,180));
 
             var enemy = (GameObject)Instantiate(enemyPrefab, pos, rotation);
-			enemy.transform.parent = world.transform;
+			// enemy.transform.parent = world.transform;
             NetworkServer.Spawn(enemy);
         }
     }

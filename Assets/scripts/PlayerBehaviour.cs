@@ -23,7 +23,7 @@ public class PlayerBehaviour : NetworkBehaviour {
 	void Start () {
 		facing = Direction.DOWN;
 		world = GameObject.Find("World");
-		transform.parent = world.transform;
+		// transform.parent = world.transform;
 		Input.simulateMouseWithTouches = true;
 	}
 	
@@ -43,7 +43,7 @@ public class PlayerBehaviour : NetworkBehaviour {
     		} else {
 				isAiming = false;
 				GameObject newTarget = Instantiate(target);
-				newTarget.transform.parent = world.transform;
+				// newTarget.transform.parent = world.transform;
 				newTarget.transform.position = touchWorldPos;
 				Destroy(newTarget, 1.0f);
 				CmdMove(touchWorldPos);
@@ -83,6 +83,11 @@ public class PlayerBehaviour : NetworkBehaviour {
 	}
 
 	public override void OnStartLocalPlayer() {
+		destination = transform.position;
+		Camera.main.transform.position = new Vector3(
+			transform.position.x,
+			transform.position.y,
+			Camera.main.transform.position.z);
 		var smoothCam = Camera.main.GetComponent<SmoothCamera2D>();
 		smoothCam.target = this.transform;
 		smoothCam.bounds = new Rect(
@@ -103,7 +108,7 @@ public class PlayerBehaviour : NetworkBehaviour {
             arrowPrefab,
 			transform.position - facing.toVector3(),
 			Quaternion.FromToRotation(Direction.RIGHT.toVector3(), facing.toVector3()));
-		arrow.transform.parent = world.transform;
+		// arrow.transform.parent = world.transform;
 
 		// make the arrow move away in front of the player
 		arrow.GetComponent<Rigidbody2D>().velocity = facing.toVector2() * G.get().ARROW_SPEED;

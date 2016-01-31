@@ -27,18 +27,18 @@ public class CiderManager : NetworkBehaviour {
 					randPosNeg(Random.Range(G.HALF_SCREEN_HEIGHT, G.HALF_WORLD_HEIGHT - breweryHeight)),
 					0.0f);
 
-				Debug.Log("brewery pos: " + pos + " bw " + breweryWidth + " bh "+ breweryHeight);
+				// Debug.Log("brewery pos: " + pos + " bw " + breweryWidth + " bh "+ breweryHeight);
 			} while (collidesWithPrevious(prevPositions, pos, breweryWidth, breweryHeight)
 				&& attempts++ < G.get().MAX_SPAWN_ATTEMPTS);
 			if (attempts >= G.get().MAX_SPAWN_ATTEMPTS) {
-				Debug.Log("Giving up spawning more brewerys after " + attempts + " attempts");
+				// Debug.Log("Giving up spawning more brewerys after " + attempts + " attempts");
 				return;
 			}
 
             var rotation = Quaternion.identity; //Euler( Random.Range(0,180), Random.Range(0,180), Random.Range(0,180));
 
 			var brewery = (GameObject)Instantiate(breweryPrefab, pos, rotation);
-			brewery.transform.parent = world.transform;
+			// brewery.transform.parent = world.transform;
 			NetworkServer.Spawn(brewery);
 			prevPositions.Add(pos);
         }
@@ -52,7 +52,7 @@ public class CiderManager : NetworkBehaviour {
 		foreach (Vector3 prevPos in prevPositions) {
 			Vector3 delta = prevPos - newPos;
 			if (Mathf.Abs(delta.x) < w && Mathf.Abs(delta.y) < h) {
-				Debug.Log("Collides with another brewery!" + prevPos + " "+ newPos + " "+ delta);
+				// Debug.Log("Collides with another brewery!" + prevPos + " "+ newPos + " "+ delta);
 				return true;
 			}
 		}
