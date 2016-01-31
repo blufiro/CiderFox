@@ -58,7 +58,7 @@ public class PlayerBehaviour : NetworkBehaviour {
 		} else if (Input.GetMouseButtonUp(0)) {
 			if (isAiming) {
 				// Called from the client but invoked on the server.
-	            CmdFire();
+	            // CmdFire();
 				isAiming = false;
     		}
         }
@@ -105,26 +105,26 @@ public class PlayerBehaviour : NetworkBehaviour {
         GetComponent<SpriteRenderer>().material.color = Color.red;
     }
 
-    [Command]
-	void CmdFire()
-    {
-		Debug.Log("Fire");
-		// create the arrow object locally
-        var arrow = (GameObject)Instantiate(
-            arrowPrefab,
-			transform.position - facing.toVector3(),
-			Quaternion.FromToRotation(Direction.RIGHT.toVector3(), facing.toVector3()));
-		// arrow.transform.parent = world.transform;
-
-		// make the arrow move away in front of the player
-		arrow.GetComponent<Rigidbody2D>().velocity = facing.toVector2() * G.get().ARROW_SPEED;
-
-		// spawn the arrow on the clients
-		NetworkServer.Spawn(arrow);
-        
-		// make arrow disappear after 2 seconds
-		Destroy(arrow, G.get().ARROW_LIFE);
-    }
+//    [Command]
+//	void CmdFire()
+//    {
+//		Debug.Log("Fire");
+//		// create the arrow object locally
+//        var arrow = (GameObject)Instantiate(
+//            arrowPrefab,
+//			transform.position - facing.toVector3(),
+//			Quaternion.FromToRotation(Direction.RIGHT.toVector3(), facing.toVector3()));
+//		// arrow.transform.parent = world.transform;
+//
+//		// make the arrow move away in front of the player
+//		arrow.GetComponent<Rigidbody2D>().velocity = facing.toVector2() * G.get().ARROW_SPEED;
+//
+//		// spawn the arrow on the clients
+//		NetworkServer.Spawn(arrow);
+//        
+//		// make arrow disappear after 2 seconds
+//		Destroy(arrow, G.get().ARROW_LIFE);
+//    }
 
     private void walk(Vector2 moveVec) {
 		transform.Translate(moveVec);
