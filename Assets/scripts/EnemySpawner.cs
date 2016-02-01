@@ -4,7 +4,7 @@ using System.Collections;
 
 public class EnemySpawner : NetworkBehaviour {
 
-	public GameObject world;
+	// public GameObject world;
 	public GameObject enemyPrefab;
     public int numEnemies;
 

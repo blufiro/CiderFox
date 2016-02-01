@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class CiderManager : NetworkBehaviour {
 
-	public GameObject world;
+	// public GameObject world;
 	public GameObject breweryPrefab;
 	public GameObject ciderPrefab;
     public int numBreweries;
