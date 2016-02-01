@@ -69,7 +69,7 @@ public class PlayerBehaviour : NetworkBehaviour {
 		float distance = toDestination.sqrMagnitude;
 		if (distance > 0) {
 			Vector2 moveVec = toDestination;
-			if (distance > G.get().PLAYER_MOVE_SPEED) {
+			if (distance > G.get().PLAYER_MOVE_SPEED * G.get().PLAYER_MOVE_SPEED) {
 				toDestination.Normalize();
 				moveVec = toDestination * G.get().PLAYER_MOVE_SPEED;
 			}
@@ -101,8 +101,6 @@ public class PlayerBehaviour : NetworkBehaviour {
 			-G.HALF_WORLD_HEIGHT + G.HALF_SCREEN_HEIGHT,
 			G.WORLD_WIDTH - G.SCREEN_WIDTH,
 			G.WORLD_HEIGHT - G.SCREEN_HEIGHT);
-
-        GetComponent<SpriteRenderer>().material.color = Color.red;
     }
 
 //    [Command]
