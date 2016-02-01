@@ -21,6 +21,7 @@ public class DebugStart : MonoBehaviour {
 
 		if (isDebug) {
 			gameObject.GetComponent<NetworkManager>().StartHost();
+			yield return new WaitForSeconds(1);
 		}
 	}
 }
