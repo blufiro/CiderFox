@@ -31,6 +31,7 @@ public class BreweryBehaviour : NetworkBehaviour {
 				spawned.GetComponent<ItemBehaviour>().OnTaken += OnCiderTaken;
 				NetworkServer.Spawn(spawned);
 				produceTimeElapsed = G.get().CIDER_PRODUCE_DELAY;
+				prevSpawnedCiderExists = true;
 			}
 		}
     }
