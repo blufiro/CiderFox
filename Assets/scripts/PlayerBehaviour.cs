@@ -7,6 +7,9 @@ public class PlayerBehaviour : NetworkBehaviour {
 	public GameObject arrowPrefab;
 	public GameObject target;
 
+	public AudioClip sfx_player_target;
+
+
 	[SyncVar(hook="FacingChanged")]
 	private int networkFacing;
 	private Direction facing;
@@ -48,6 +51,10 @@ public class PlayerBehaviour : NetworkBehaviour {
 				newTarget.transform.position = touchWorldPos;
 				Destroy(newTarget, 1.0f);
 				CmdMove(touchWorldPos);
+
+				AudioSource audio = GetComponent<AudioSource>();
+				audio.clip = sfx_player_target;
+				audio.Play();
     		}
 		} else if (Input.GetMouseButton(0)) {
 			if (isAiming) {

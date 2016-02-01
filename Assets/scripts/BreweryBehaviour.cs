@@ -10,6 +10,8 @@ public class BreweryBehaviour : NetworkBehaviour {
 	private float produceTimeElapsed;
 	private Vector3 produceSpawnPosition;
 
+	public AudioClip sfx_cider_brewery;
+
 	public override void OnStartServer()
     {
 		produceTimeElapsed = 0;
@@ -37,5 +39,9 @@ public class BreweryBehaviour : NetworkBehaviour {
 
     void OnCiderTaken() {
 		prevSpawnedCiderExists = false;
+
+		AudioSource audio = GetComponent<AudioSource>();
+		audio.clip = sfx_cider_brewery;
+		audio.Play();
     }
 }

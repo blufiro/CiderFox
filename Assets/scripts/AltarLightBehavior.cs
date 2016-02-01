@@ -7,6 +7,9 @@ public class AltarLightBehavior : NetworkBehaviour {
 	public Sprite lightOn;
 	public Sprite lightOff;
 
+	public AudioClip sfx_light_on;
+	public AudioClip sfx_light_off;
+
 	private bool m_isOn;
 
 	public void SwitchOn() {
@@ -16,6 +19,10 @@ public class AltarLightBehavior : NetworkBehaviour {
 
 		RpcLightChanged(true);
 
+		AudioSource audio = GetComponent<AudioSource>();
+		audio.clip = sfx_light_on;
+		audio.Play();
+
 		StartCoroutine("SwitchOff");
 	}
 
@@ -23,6 +30,10 @@ public class AltarLightBehavior : NetworkBehaviour {
 		yield return new WaitForSeconds(G.get().LIGHT_OFF_DELAY);
 
 		RpcLightChanged(false);
+
+		AudioSource audio = GetComponent<AudioSource>();
+		audio.clip = sfx_light_off;
+		audio.Play();
 	}
 
 	void OnTriggerEnter2D(Collider2D collision) {

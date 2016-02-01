@@ -7,6 +7,9 @@ public class AltarBehavior : NetworkBehaviour {
 	public GameObject gameController;
 	public AltarLightBehavior[] altarLights;
 
+	public AudioClip sfx_cider_altar;
+	public AudioClip sfx_altar_score;
+
 	private UIController uiController;
 
 	int numCiders = 0;
@@ -31,6 +34,10 @@ public class AltarBehavior : NetworkBehaviour {
 
     	if (allLightsOn) {
     		OnLevelUp();
+
+			AudioSource audio = GetComponent<AudioSource>();
+			audio.clip = sfx_altar_score;
+			audio.Play();
     	}
     }
 
@@ -40,6 +47,10 @@ public class AltarBehavior : NetworkBehaviour {
 
 		numCiders++;
 		Debug.Log("numCiders: " + numCiders);
+
+		AudioSource audio = GetComponent<AudioSource>();
+		audio.clip = sfx_cider_altar;
+		audio.Play();
 
 		uiController.RpcShowWalkInstruction();
 	}
