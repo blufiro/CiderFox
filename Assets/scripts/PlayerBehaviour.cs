@@ -18,7 +18,7 @@ public class PlayerBehaviour : NetworkBehaviour {
 	private Vector3 tapBegin;
 	private bool isAiming;
 	private Animator animator;
-
+	private Rigidbody2D rigidBody;
 
 	// Use this for initialization
 	void Start () {
@@ -26,6 +26,7 @@ public class PlayerBehaviour : NetworkBehaviour {
 		// world = GameObject.Find("World");
 		// transform.parent = world.transform;
 		Input.simulateMouseWithTouches = true;
+		rigidBody = GetComponent<Rigidbody2D>();
 	}
 	
 	// Update is called once per frame
@@ -78,13 +79,13 @@ public class PlayerBehaviour : NetworkBehaviour {
 	}
 
 	public override void OnStartServer() {
+		// animator needs to exist before networkFacing can take effect.
 		animator = GetComponent<Animator>();
-		if (isServer) {
-			networkFacing = facing.toInt();
-		}
+		networkFacing = facing.toInt();
 	}
 
 	public override void OnStartClient() {
+		// animator needs to exist before networkFacing can take effect.
 		animator = GetComponent<Animator>();
 	}
 
@@ -125,7 +126,8 @@ public class PlayerBehaviour : NetworkBehaviour {
 //    }
 
     private void walk(Vector2 moveVec) {
-		transform.Translate(moveVec);
+		Vector3 newPosition = moveVec;
+		rigidBody.MovePosition(transform.position + newPosition);
 		Direction newFacing = Direction.get(moveVec);
 		lazyUpdateFacing(newFacing);
     }
