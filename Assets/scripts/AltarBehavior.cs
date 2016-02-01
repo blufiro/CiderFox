@@ -48,6 +48,8 @@ public class AltarBehavior : NetworkBehaviour {
 		if (!isServer) 
 			return;
 
+		uiController.addScore(numCiders * numCiders);
+
 		numCiders = 0;
 		level++;
 

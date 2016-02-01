@@ -24,4 +24,8 @@ public class EnemySpawner : NetworkBehaviour {
             NetworkServer.Spawn(enemy);
         }
     }
+
+	void OnAngryTimeUp() {
+		Debug.Log("Angry time up!");
+	}
 }
