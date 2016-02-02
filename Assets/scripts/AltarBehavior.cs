@@ -4,21 +4,14 @@ using System.Collections;
 
 public class AltarBehavior : NetworkBehaviour {
 
-	public GameObject gameController;
+	public GameController gameController;
 	public AltarLightBehavior[] altarLights;
 
 	public AudioClip sfx_cider_altar;
 	public AudioClip sfx_altar_score;
 
-	private UIController uiController;
-
 	int numCiders = 0;
 	int level = 1;
-
-	public override void OnStartServer()
-    {
-		uiController = gameController.GetComponent<UIController>();
-    }
 
     void Update() {
     	if (!isServer)
@@ -48,19 +41,19 @@ public class AltarBehavior : NetworkBehaviour {
 		audio.clip = sfx_cider_altar;
 		audio.Play();
 
-		uiController.RpcShowWalkInstruction();
+		gameController.RpcShowWalkInstruction();
 	}
 
 	void OnLevelUp() {
 		if (!isServer) 
 			return;
 
-		uiController.addScore(numCiders * numCiders);
+		gameController.addScore(numCiders * numCiders);
 
 		numCiders = 0;
 		level++;
 
-		uiController.RpcShowBringCiderInstruction();
+		gameController.RpcShowBringCiderInstruction();
 
 		AudioSource audio = GetComponent<AudioSource>();
 		audio.clip = sfx_altar_score;

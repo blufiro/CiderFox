@@ -3,7 +3,7 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 using System.Collections;
 
-public class UIController : NetworkBehaviour {
+public class GameController : NetworkBehaviour {
 
 	public GameObject bringCiderInstruction;
 	public GameObject walkInstruction;
@@ -12,13 +12,18 @@ public class UIController : NetworkBehaviour {
 
 	[SyncVar(hook="ScoreUpdated")]
 	private int score;
-	private float timeElapsed;
+	[SyncVar(hook="TimeUpdated")]
+	private float serverTimeElapsed;
+
 	private RectTransform angryBarRectTransform;
-	private float originalBarWidth;
+	private Vector2 minBarDim;
+	private Vector2 originalBarDim;
+	private float clientTimeElapsed;
 
 	void Start() {
 		angryBarRectTransform = angryBar.GetComponent<RectTransform>();
-		originalBarWidth = angryBarRectTransform.rect.width;
+		minBarDim = new Vector2(0, angryBarRectTransform.rect.height);
+		originalBarDim = new Vector2(angryBarRectTransform.rect.width, angryBarRectTransform.rect.height);
 		scoreText.text = "0";
 	}
 
@@ -29,18 +34,19 @@ public class UIController : NetworkBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		timeElapsed += Time.deltaTime;
-		float timeLeft = G.get().GOD_ANGRY_DURATION - timeElapsed;
-		if (timeLeft < 0) {
-			timeLeft = 0;
-			if (isServer) {
-				gameObject.SendMessage("OnAngryTimeUp");
-			}
-			timeElapsed = 0;
+		// timeElapsed is from the server.
+		clientTimeElapsed += Time.deltaTime;
+		float barRatio = Mathf.Clamp01(1 - (clientTimeElapsed / G.get().GOD_ANGRY_DURATION));
+		angryBarRectTransform.sizeDelta = Vector2.Lerp(minBarDim, originalBarDim, barRatio);
+
+		if (!isServer) 
+			return;
+
+		serverTimeElapsed += Time.deltaTime;
+		if (serverTimeElapsed >= G.get().GOD_ANGRY_DURATION) {
+			gameObject.SendMessage("OnGameOver");
+			serverTimeElapsed = 0;
 		}
-		angryBarRectTransform.sizeDelta = new Vector2(
-			timeLeft / G.get().GOD_ANGRY_DURATION * originalBarWidth,
-			angryBarRectTransform.rect.height);
 	}
 
 
@@ -74,7 +80,22 @@ public class UIController : NetworkBehaviour {
 		score = 0;
 	}
 
+	public void OnGameOver() {
+		if (!isServer)
+			return;
+		
+	}
+
 	private void ScoreUpdated(int score) {
 		scoreText.text = score.ToString();
+	}
+
+	private void TimeUpdated(float newTimeElapsed) {
+		if (!isServer) {
+			Debug.Log("clientTimeElapsed: "+ clientTimeElapsed+" newTimeElapsed: "+ newTimeElapsed);
+			if (Mathf.Abs(clientTimeElapsed - newTimeElapsed) > G.get().SNAP_TIME_THRESHOLD) {
+				clientTimeElapsed = newTimeElapsed;
+			}
+		}
 	}
 }

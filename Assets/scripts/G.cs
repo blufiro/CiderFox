@@ -20,6 +20,7 @@ public class G
 	public float CIDER_PRODUCE_DELAY = 30.0f; // seconds
 	public int CARRY_OVERHEAD_OFFSET_Y = 4; // pixels
 	public float GOD_ANGRY_DURATION = 180; // seconds
+	public float SNAP_TIME_THRESHOLD = 1; // seconds
 
 	private static G instance = new G();
 	public static G get() {
