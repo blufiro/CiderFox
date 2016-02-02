@@ -9,6 +9,9 @@ public class GameController : NetworkBehaviour {
 	public GameObject walkInstruction;
 	public Text scoreText;
 	public GameObject angryBar;
+	public GameObject gameOver;
+	public Text gameOverScoreText;
+	public NetworkManager networkManager;
 
 	[SyncVar(hook="ScoreUpdated")]
 	private int score;
@@ -19,6 +22,7 @@ public class GameController : NetworkBehaviour {
 	private Vector2 minBarDim;
 	private Vector2 originalBarDim;
 	private float clientTimeElapsed;
+	private bool isGameOver;
 
 	void Start() {
 		angryBarRectTransform = angryBar.GetComponent<RectTransform>();
@@ -39,12 +43,19 @@ public class GameController : NetworkBehaviour {
 		float barRatio = Mathf.Clamp01(1 - (clientTimeElapsed / G.get().GOD_ANGRY_DURATION));
 		angryBarRectTransform.sizeDelta = Vector2.Lerp(minBarDim, originalBarDim, barRatio);
 
+		if (Input.GetKeyUp(KeyCode.Escape)) {
+			OnGameOver(0);
+		}
+
 		if (!isServer) 
 			return;
 
+		if (isGameOver)
+			return;	
+
 		serverTimeElapsed += Time.deltaTime;
 		if (serverTimeElapsed >= G.get().GOD_ANGRY_DURATION) {
-			gameObject.SendMessage("OnGameOver");
+			gameObject.SendMessage("OnGameOver", score);
 			serverTimeElapsed = 0;
 		}
 	}
@@ -68,6 +79,19 @@ public class GameController : NetworkBehaviour {
 		walkInstruction.SetActive(false);
 	}
 
+	[ClientRpc]
+	public void RpcGameOver(int finalScore) {
+		isGameOver = true;
+		gameOverScoreText.text = finalScore.ToString();
+		gameOver.SetActive(true);
+		clientTimeElapsed = G.get().GOD_ANGRY_DURATION;
+	}
+
+	[Command]
+	public void CmdDisconnect() {
+		networkManager.StopHost();
+	}
+
 	public void addScore(int points) {
 		if (!isServer)
 			return;
@@ -80,10 +104,10 @@ public class GameController : NetworkBehaviour {
 		score = 0;
 	}
 
-	public void OnGameOver() {
+	public void OnGameOver(int finalScore) {
 		if (!isServer)
 			return;
-		
+		RpcGameOver(finalScore);
 	}
 
 	private void ScoreUpdated(int score) {
