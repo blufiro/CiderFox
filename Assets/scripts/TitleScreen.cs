@@ -30,14 +30,6 @@ public class TitleScreen : MonoBehaviour {
 		switchState(State.TITLE);
 	}
 
-	public void OnClickHost() {
-		networkManager.GetComponent<NetworkManager>().StartHost();
-	}
-
-	public void OnClickClient() {
-		networkManager.GetComponent<NetworkManager>().StartClient();
-	}
-
 	enum State {
 		TITLE,
 		LOBBY,
@@ -47,9 +39,13 @@ public class TitleScreen : MonoBehaviour {
 		titleMenu.SetActive(false);
 		lobbyMenu.SetActive(false);
 		creditsMenu.SetActive(false);
+		networkManager.GetComponent<NetworkManagerHUD>().showGUI = false;
 		switch (state) {
 			case State.TITLE: titleMenu.SetActive(true); break;
-			case State.LOBBY: lobbyMenu.SetActive(true); break;
+			case State.LOBBY:
+				lobbyMenu.SetActive(true);
+				networkManager.GetComponent<NetworkManagerHUD>().showGUI = true;
+				break;
 			case State.CREDITS: creditsMenu.SetActive(true); break;
 		}
 	}

@@ -34,10 +34,6 @@ public class AltarBehavior : NetworkBehaviour {
 
     	if (allLightsOn) {
     		OnLevelUp();
-
-			AudioSource audio = GetComponent<AudioSource>();
-			audio.clip = sfx_altar_score;
-			audio.Play();
     	}
     }
 
@@ -65,5 +61,9 @@ public class AltarBehavior : NetworkBehaviour {
 		level++;
 
 		uiController.RpcShowBringCiderInstruction();
+
+		AudioSource audio = GetComponent<AudioSource>();
+		audio.clip = sfx_altar_score;
+		audio.Play();
 	}
 }

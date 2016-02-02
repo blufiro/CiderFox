@@ -8,7 +8,6 @@ public class UIController : NetworkBehaviour {
 	public GameObject bringCiderInstruction;
 	public GameObject walkInstruction;
 	public Text scoreText;
-	public Text timerText;
 	public GameObject angryBar;
 
 	[SyncVar(hook="ScoreUpdated")]
@@ -39,7 +38,6 @@ public class UIController : NetworkBehaviour {
 			}
 			timeElapsed = 0;
 		}
-		timerText.text = timeLeft.ToString("F1");
 		angryBarRectTransform.sizeDelta = new Vector2(
 			timeLeft / G.get().GOD_ANGRY_DURATION * originalBarWidth,
 			angryBarRectTransform.rect.height);
