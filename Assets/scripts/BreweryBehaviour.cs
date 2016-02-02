@@ -15,8 +15,7 @@ public class BreweryBehaviour : NetworkBehaviour {
 	public override void OnStartServer()
     {
 		produceTimeElapsed = 0;
-		float breweryHalfHeight = GetComponent<SpriteRenderer>().sprite.texture.height / 2.0f;
-		produceSpawnPosition = transform.position + new Vector3(0, -breweryHalfHeight, 0);
+		produceSpawnPosition = gameObject.transform.FindChild("CiderSpawnPoint").position;
     }
 
     void Update() {
