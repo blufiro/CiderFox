@@ -126,14 +126,6 @@
     "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 },
     "sourceSize": { "w": 64, "h": 64 },
     "duration": 100
-   },
-   "player 16.ase": {
-    "frame": { "x": 0, "y": 256, "w": 64, "h": 64 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 },
-    "sourceSize": { "w": 64, "h": 64 },
-    "duration": 100
    }
  },
  "meta": {
@@ -141,7 +133,7 @@
   "version": "1.1.1",
   "image": "/Users/irislim/CiderFox/Assets/ase/player.png",
   "format": "RGBA8888",
-  "size": { "w": 256, "h": 320 },
+  "size": { "w": 256, "h": 256 },
   "scale": "1"
  }
 }
