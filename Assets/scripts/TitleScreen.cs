@@ -51,8 +51,25 @@ public class TitleScreen : MonoBehaviour {
 	}
 
 	public void OnClickFindGame() {
-		var req = new ListMatchRequest();
-		match.ListMatches(req, networkLobbyManager.OnMatchList);
+		var req = new ListMatchRequest ();
+		req.pageNum = 0;
+		req.pageSize = 20;
+		req.nameFilter = "";
+		req.includePasswordMatches = false;
+		match.ListMatches(req, OnMatchList);
+	}
+
+	void OnMatchList(ListMatchResponse matchList)
+	{
+		networkLobbyManager.OnMatchList (matchList);
+		if (matchList.matches.Count > 0) {
+			var matchDesc = matchList.matches [0];
+			var req = new JoinMatchRequest();
+			req.networkId = matchDesc.networkId;
+			req.password = "";
+			match.JoinMatch(req, networkLobbyManager.OnMatchJoined);
+		}
+		Debug.Log("match count: " + matchList.matches.Count);
 	}
 
 	public void OnClickJoinGame() {
