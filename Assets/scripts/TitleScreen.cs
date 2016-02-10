@@ -107,10 +107,11 @@ public class TitleScreen : MonoBehaviour {
 			foreach (MatchDesc matchDesc in matchList.matches) {
 				GameObject matchButton = (GameObject) Instantiate (matchButtonTemplate);
 				matchButton.transform.SetParent(onlineFindScrollRect.content.transform, false);
-				matchButton.transform.Translate(new Vector3 (0, j * buttonSpace, 0));
+				matchButton.transform.Translate(new Vector3 (0, -j * buttonSpace, 0));
 				matchButton.transform.GetChild (0).GetComponent<Text> ().text = matchDesc.name;
 				matchButton.GetComponent<Button> ().onClick.AddListener (
 					delegate { OnClickSelectGame (matchDesc); });
+				j++;
 			}
 		}
 		Debug.Log("match count: " + matchList.matches.Count);
