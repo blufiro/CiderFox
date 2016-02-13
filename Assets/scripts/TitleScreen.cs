@@ -30,7 +30,7 @@ public class TitleScreen : MonoBehaviour {
 	public Text onlineFindJoinGameNameText;
 	public InputField onlineFindPasswordInput;
 
-	public NetworkLobbyManager networkLobbyManager;
+	public MyNetworkLobbyManager networkLobbyManager;
 
 	private NetworkMatch match;
 	private MatchDesc selectedMatchDesc;
@@ -73,10 +73,11 @@ public class TitleScreen : MonoBehaviour {
 	public void OnClickCreateGame() {
 		var req = new CreateMatchRequest();
 		req.name = onlineHostGameNameInput.text;
-		req.size = 4;
+		req.size = G.NUM_PLAYERS;
 		req.advertise = onlineHostGamePublicToggle.isOn;
 		req.password = onlineHostGamePasswordInput.text;
 		match.CreateMatch(req, networkLobbyManager.OnMatchCreate);
+		switchState (State.LOBBY);
 	}
 
 	public void OnClickFindGame() {
@@ -133,10 +134,7 @@ public class TitleScreen : MonoBehaviour {
 		req.networkId = selectedMatchDesc.networkId;
 		req.password = onlineFindPasswordInput.text;
 		match.JoinMatch(req, networkLobbyManager.OnMatchJoined);
-	}
-
-	public void OnClickStartGame() {
-		
+		switchState (State.LOBBY);
 	}
 
 	public void OnClickCredits() {
@@ -180,7 +178,7 @@ public class TitleScreen : MonoBehaviour {
 			case State.LAN: lanMenu.SetActive(true); break;
 			case State.ONLINE: onlineMenu.SetActive(true); break;
 			case State.ONLINE_HOST: onlineHostMenu.SetActive(true); break;
-		case State.ONLINE_FIND: onlineFindMenu.SetActive(true); OnClickFindGame (); break;
+			case State.ONLINE_FIND: onlineFindMenu.SetActive(true); OnClickFindGame (); break;
 			case State.LOBBY: lobbyMenu.SetActive (true); break;
 			case State.CREDITS: creditsMenu.SetActive(true); break;
 		}
