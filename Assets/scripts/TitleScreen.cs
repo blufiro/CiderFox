@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Networking.Match;
+using UnityEngine.Networking.Types;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
@@ -30,13 +31,17 @@ public class TitleScreen : MonoBehaviour {
 	public Text onlineFindJoinGameNameText;
 	public InputField onlineFindPasswordInput;
 
-	public MyNetworkLobbyManager networkLobbyManager;
-
+	private MyNetworkLobbyManager networkLobbyManager;
 	private NetworkMatch match;
 	private MatchDesc selectedMatchDesc;
-	private State currState;
+	private long networkId;
+	private long nodeId;
+	private bool isMatchCreator;
 
 	void Start() {
+		// networkLobbyManager is not destroyed on load, so we have to find it
+		// in case this title screen is destroyed.
+		networkLobbyManager = GameObject.Find("NetworkManager").GetComponent<MyNetworkLobbyManager>();
 		switchState(State.TITLE);
 	}
 
@@ -59,6 +64,7 @@ public class TitleScreen : MonoBehaviour {
 
 	public void OnClickOnline() {
 		switchState(State.ONLINE);
+		Debug.Log ("networkLobbyManager: " + networkLobbyManager);
 		networkLobbyManager.StartMatchMaker();
 		match = networkLobbyManager.matchMaker;
 	}
@@ -77,8 +83,15 @@ public class TitleScreen : MonoBehaviour {
 		req.size = G.NUM_PLAYERS;
 		req.advertise = onlineHostGamePublicToggle.isOn;
 		req.password = onlineHostGamePasswordInput.text;
-		match.CreateMatch(req, networkLobbyManager.OnMatchCreate);
+		match.CreateMatch(req, this.OnMatchCreate);
+		isMatchCreator = true;
 		switchState (State.LOBBY);
+	}
+
+	void OnMatchCreate(CreateMatchResponse matchInfo) {
+		networkLobbyManager.OnMatchCreate (matchInfo);
+		this.networkId = (long) matchInfo.networkId;
+		this.nodeId = (long) matchInfo.nodeId;
 	}
 
 	public void OnClickFindGame() {
@@ -136,8 +149,15 @@ public class TitleScreen : MonoBehaviour {
 		var req = new JoinMatchRequest();
 		req.networkId = selectedMatchDesc.networkId;
 		req.password = onlineFindPasswordInput.text;
-		match.JoinMatch(req, networkLobbyManager.OnMatchJoined);
+		match.JoinMatch(req, this.OnMatchJoined);
+		isMatchCreator = false;
 		switchState (State.LOBBY);
+	}
+
+	void OnMatchJoined(JoinMatchResponse matchInfo) {
+		networkLobbyManager.OnMatchJoined (matchInfo);
+		this.networkId = (long) matchInfo.networkId;
+		this.nodeId = (long) matchInfo.nodeId;
 	}
 
 	public void OnClickCredits() {
@@ -151,10 +171,28 @@ public class TitleScreen : MonoBehaviour {
 	public void OnClickBackToTitle() {
 		switchState(State.TITLE);
 		if (match != null) {
-			Debug.Log ("StopMatchMaker called!");
-			networkLobbyManager.StopMatchMaker();
+			if (isMatchCreator) {
+				Debug.Log ("OnClickBackToTitle.DestroyMatch");
+				networkLobbyManager.matchMaker.DestroyMatch ((NetworkID)networkId, OnDestroyMatch);
+			} else{
+				Debug.Log ("OnClickBackToTitle.DropConnection");
+				DropConnectionRequest dropReq = new DropConnectionRequest ();
+				dropReq.networkId = (NetworkID) networkId;
+				dropReq.nodeId = (NodeID) nodeId;
+				networkLobbyManager.matchMaker.DropConnection (dropReq, OnConnectionDrop);
+
+			}
+			networkLobbyManager.StopClient ();
 			match = null;
 		}
+	}
+
+	void OnDestroyMatch(BasicResponse response) {
+		Debug.Log ("OnDestroyMatch()");
+	}
+
+	void OnConnectionDrop(BasicResponse response) {
+		Debug.Log ("OnConnectionDrop()");
 	}
 
 	enum State {
@@ -187,6 +225,5 @@ public class TitleScreen : MonoBehaviour {
 			case State.LOBBY: lobbyMenu.SetActive (true); break;
 			case State.CREDITS: creditsMenu.SetActive(true); break;
 		}
-		currState = state;
 	}
 }

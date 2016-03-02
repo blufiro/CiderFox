@@ -10,19 +10,12 @@ public class LobbyPlayerBehaviour : NetworkLobbyPlayer {
 	private GameObject lobbyUI;
 	private Toggle readyToggle;
 
-//	public override void OnStartServer() {
-//		Debug.Log ("lobbyplayer.OnStartServer");
-//	}
-
-	public override void OnStartClient() {
-		base.OnStartClient ();
-		Debug.Log ("lobbyplayer.OnStartClient");
+	public override void OnClientEnterLobby() {
+		base.OnClientEnterLobby ();
+		Debug.Log ("lobbyplayer.OnClientEnterLobby");
 		GameObject canvas = GameObject.Find ("Canvas");
 
-		if (lobbyUI != null) {
-			Destroy (lobbyUI);
-			lobbyUI = null;
-		}
+		clearUI ();
 		lobbyUI = (GameObject)Instantiate (lobbyUITemplate);
 		readyToggle = lobbyUI.transform.GetComponentInChildren<Toggle> ();
 		lobbyUI.transform.SetParent(canvas.transform, false);
@@ -32,21 +25,18 @@ public class LobbyPlayerBehaviour : NetworkLobbyPlayer {
 		readyToggle.interactable = false;
 	}
 
-	public override void OnStartLocalPlayer() {
+	public override void OnStartLocalPlayer ()
+	{
 		base.OnStartLocalPlayer ();
-		Debug.Log ("lobbyplayer.OnStartLocalPlayer");
 		readyToggle.interactable = true;
 		readyToggle.onValueChanged.AddListener(OnClickReadyToggle);
 	}
 
-//	public override void OnClientEnterLobby() {
-//		base.OnClientEnterLobby
-//		readyToggle.enabled = this.isLocalPlayer;
-//	}
-//
-//	public override void OnClientExitLobby() {
-//		lobbyUI.SetActive (false);
-//	}
+	public override void OnClientExitLobby() {
+		base.OnClientExitLobby ();
+		Debug.Log ("lobbyplayer.OnClientExitLobby");
+		clearUI ();
+	}
 
 	public override void OnClientReady(bool readyState) {
 		readyToggle.isOn = readyState;
@@ -57,6 +47,14 @@ public class LobbyPlayerBehaviour : NetworkLobbyPlayer {
 			SendReadyToBeginMessage ();
 		} else {
 			SendNotReadyToBeginMessage ();
+		}
+	}
+
+	private void clearUI() {
+		if (lobbyUI != null) {
+			Destroy (lobbyUI);
+			lobbyUI = null;
+			readyToggle = null;
 		}
 	}
 }
