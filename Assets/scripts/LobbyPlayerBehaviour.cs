@@ -27,7 +27,7 @@ public class LobbyPlayerBehaviour : NetworkLobbyPlayer {
 		readyToggle = lobbyUI.transform.GetComponentInChildren<Toggle> ();
 		lobbyUI.transform.SetParent(canvas.transform, false);
 		float width = lobbyUI.GetComponent<RectTransform> ().sizeDelta.x;
-		lobbyUI.transform.Translate (new Vector3 (this.slot * width - width / 2, 0));
+		lobbyUI.transform.localPosition = (new Vector3 ( (this.slot == 0) ? -width : width, 0));
 
 		readyToggle.interactable = false;
 	}

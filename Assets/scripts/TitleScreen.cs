@@ -174,6 +174,7 @@ public class TitleScreen : MonoBehaviour {
 		onlineMenu.SetActive(false);
 		onlineHostMenu.SetActive(false);
 		onlineFindMenu.SetActive(false);
+		onlineFindJoinGameOverlay.SetActive (false);
 		lobbyMenu.SetActive(false);
 		creditsMenu.SetActive(false);
 		switch (state) {
