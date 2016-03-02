@@ -115,6 +115,8 @@ public class TitleScreen : MonoBehaviour {
 					delegate { OnClickSelectGame (matchDesc); });
 				j++;
 			}
+			onlineFindScrollRect.content.sizeDelta =
+				new Vector2(onlineFindScrollRect.content.sizeDelta.x, j * buttonSpace);
 		}
 		Debug.Log("match count: " + matchList.matches.Count);
 	}
