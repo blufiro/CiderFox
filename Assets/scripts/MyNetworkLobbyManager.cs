@@ -47,7 +47,15 @@ public class MyNetworkLobbyManager : NetworkLobbyManager
 
 	public override void OnLobbyServerPlayersReady() {
 		Debug.Log ("OnLobbyServerPlayersReady()");
-		ServerChangeScene (this.playScene);
+		bool allReady = true;
+		foreach (NetworkLobbyPlayer p in lobbySlots)
+		{
+			if (!p.readyToBegin)
+				allReady = false;
+		}
+		if (allReady) {
+			ServerChangeScene (this.playScene);
+		}
 	}
 
 

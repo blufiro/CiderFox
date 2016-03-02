@@ -34,6 +34,7 @@ public class TitleScreen : MonoBehaviour {
 
 	private NetworkMatch match;
 	private MatchDesc selectedMatchDesc;
+	private State currState;
 
 	void Start() {
 		switchState(State.TITLE);
@@ -148,6 +149,7 @@ public class TitleScreen : MonoBehaviour {
 	public void OnClickBackToTitle() {
 		switchState(State.TITLE);
 		if (match != null) {
+			Debug.Log ("StopMatchMaker called!");
 			networkLobbyManager.StopMatchMaker();
 			match = null;
 		}
@@ -182,5 +184,6 @@ public class TitleScreen : MonoBehaviour {
 			case State.LOBBY: lobbyMenu.SetActive (true); break;
 			case State.CREDITS: creditsMenu.SetActive(true); break;
 		}
+		currState = state;
 	}
 }

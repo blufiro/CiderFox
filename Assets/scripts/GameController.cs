@@ -116,7 +116,6 @@ public class GameController : NetworkBehaviour {
 
 	private void TimeUpdated(float newTimeElapsed) {
 		if (!isServer) {
-			Debug.Log("clientTimeElapsed: "+ clientTimeElapsed+" newTimeElapsed: "+ newTimeElapsed);
 			if (Mathf.Abs(clientTimeElapsed - newTimeElapsed) > G.get().SNAP_TIME_THRESHOLD) {
 				clientTimeElapsed = newTimeElapsed;
 			}
