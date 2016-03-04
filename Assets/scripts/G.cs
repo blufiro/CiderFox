@@ -11,6 +11,7 @@ public class G
 	public const int WORLD_HEIGHT = 720;
 	public const int HALF_WORLD_WIDTH = WORLD_WIDTH / 2;
 	public const int HALF_WORLD_HEIGHT = WORLD_HEIGHT / 2;
+	public const int MAX_AUDIO_SOURCES = 12;
 
 	public float ARROW_SPEED = 1000; // pixels per second
 	public float ARROW_LIFE = 1.0f; // seconds
@@ -22,6 +23,8 @@ public class G
 	public int CARRY_OVERHEAD_OFFSET_Y = 4; // pixels
 	public float GOD_ANGRY_DURATION = 3 * 60; // seconds
 	public float SNAP_TIME_THRESHOLD = 1; // seconds
+
+	public GameController gameController;
 
 	private static G instance = new G();
 	public static G get() {

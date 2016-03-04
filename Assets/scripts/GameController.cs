@@ -23,12 +23,20 @@ public class GameController : NetworkBehaviour {
 	private Vector2 originalBarDim;
 	private float clientTimeElapsed;
 	private bool isGameOver;
+	private AudioSource[] audioSources;
+	private int nextAudioSource;
 
 	void Start() {
+		G.get().gameController = this;
 		angryBarRectTransform = angryBar.GetComponent<RectTransform>();
 		minBarDim = new Vector2(0, angryBarRectTransform.rect.height);
 		originalBarDim = new Vector2(angryBarRectTransform.rect.width, angryBarRectTransform.rect.height);
 		scoreText.text = "0";
+		audioSources = new AudioSource[G.MAX_AUDIO_SOURCES];
+		nextAudioSource = 0;
+		for (int i = 0; i < G.MAX_AUDIO_SOURCES; i++) {
+			audioSources [i] = gameObject.AddComponent<AudioSource>();
+		}
 	}
 
 	public override void OnStartServer()
@@ -108,6 +116,22 @@ public class GameController : NetworkBehaviour {
 		if (!isServer)
 			return;
 		RpcGameOver(finalScore);
+	}
+
+	public void PlayAudio(AudioClip clip) {
+		int freeIndex = -1;
+		for (int i=nextAudioSource; i< (nextAudioSource+G.MAX_AUDIO_SOURCES); i++) {
+			if (!audioSources [i % G.MAX_AUDIO_SOURCES].isPlaying) {
+				freeIndex = i;
+				break;
+			}
+		}
+		if (freeIndex == -1) {
+			throw new UnityException ("Not enough audio sources or all occupied");
+		}
+		audioSources [freeIndex].clip = clip;
+		audioSources [freeIndex].Play ();
+		nextAudioSource = (freeIndex + 1) % G.MAX_AUDIO_SOURCES;
 	}
 
 	private void ScoreUpdated(int score) {

@@ -52,6 +52,8 @@ public class PlayerBehaviour : NetworkBehaviour {
 				newTarget.transform.position = touchWorldPos;
 				Destroy(newTarget, 1.0f);
 				CmdMove(touchWorldPos);
+				// Only play sounds for localPlayer
+				G.get().gameController.PlayAudio(sfx_player_target);
     		}
 		} else if (Input.GetMouseButton(0)) {
 			if (isAiming) {
@@ -167,9 +169,5 @@ public class PlayerBehaviour : NetworkBehaviour {
 	void CmdMove(Vector2 dest) {
 		Debug.Log("Move to dest " + dest.x + " "+dest.y);
 		destination = dest;
-
-		AudioSource audio = GetComponent<AudioSource>();
-		audio.clip = sfx_player_target;
-		audio.Play();
 	}
 }

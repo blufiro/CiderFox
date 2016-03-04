@@ -38,10 +38,15 @@ public class BreweryBehaviour : NetworkBehaviour {
     }
 
     void OnCiderTaken() {
-		prevSpawnedCiderExists = false;
+		if (!isServer)
+			return;
 
-		AudioSource audio = GetComponent<AudioSource>();
-		audio.clip = sfx_cider_brewery;
-		audio.Play();
+		prevSpawnedCiderExists = false;
+		RpcPlayCiderTakenAudio ();
     }
+
+	[ClientRpc]
+	void RpcPlayCiderTakenAudio() {
+		G.get().gameController.PlayAudio(sfx_cider_brewery);
+	}
 }

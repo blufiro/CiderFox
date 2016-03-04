@@ -35,11 +35,8 @@ public class AltarBehavior : NetworkBehaviour {
 			return;
 
 		numCiders++;
+		RpcCiderReceived ();
 		Debug.Log("numCiders: " + numCiders);
-
-		AudioSource audio = GetComponent<AudioSource>();
-		audio.clip = sfx_cider_altar;
-		audio.Play();
 
 		gameController.RpcShowWalkInstruction();
 	}
@@ -52,11 +49,18 @@ public class AltarBehavior : NetworkBehaviour {
 
 		numCiders = 0;
 		level++;
+		RpcOnLevelUp ();
 
 		gameController.RpcShowBringCiderInstruction();
+	}
 
-		AudioSource audio = GetComponent<AudioSource>();
-		audio.clip = sfx_altar_score;
-		audio.Play();
+	[ClientRpc]
+	void RpcCiderReceived() {
+		gameController.PlayAudio(sfx_cider_altar);
+	}
+
+	[ClientRpc]
+	void RpcOnLevelUp() {
+		gameController.PlayAudio(sfx_altar_score);
 	}
 }
