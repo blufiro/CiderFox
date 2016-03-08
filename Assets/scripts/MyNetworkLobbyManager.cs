@@ -50,7 +50,7 @@ public class MyNetworkLobbyManager : NetworkLobbyManager
 		bool allReady = true;
 		foreach (NetworkLobbyPlayer p in lobbySlots)
 		{
-			if (!p.readyToBegin)
+			if (p == null || !p.readyToBegin)
 				allReady = false;
 		}
 		if (allReady) {
@@ -95,5 +95,4 @@ public class MyNetworkLobbyManager : NetworkLobbyManager
 		Debug.Log ("OnLobbyClientAddPlayerFailed()");
 		base.OnLobbyClientAddPlayerFailed ();
 	}
-
 }

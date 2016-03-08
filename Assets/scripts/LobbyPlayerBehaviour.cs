@@ -23,10 +23,14 @@ public class LobbyPlayerBehaviour : NetworkLobbyPlayer {
 		lobbyUI.transform.localPosition = (new Vector3 ( (this.slot == 0) ? -width : width, 0));
 
 		readyToggle.interactable = false;
+		Debug.Log ("slot : " + slot + " ready: " + readyToBegin);
+		// This does not work readyToBegin is not initialized if another player connected and set their state to ready.
+		// readyToggle.isOn = this.readyToBegin;
 	}
 
 	public override void OnStartLocalPlayer ()
 	{
+		Debug.Log ("lobbyplayer.OnStartLocalPlayer");
 		base.OnStartLocalPlayer ();
 		readyToggle.interactable = true;
 		readyToggle.onValueChanged.AddListener(OnClickReadyToggle);
@@ -39,6 +43,7 @@ public class LobbyPlayerBehaviour : NetworkLobbyPlayer {
 	}
 
 	public override void OnClientReady(bool readyState) {
+		Debug.Log ("lobbyplayer.OnClientReady: " + readyState);
 		readyToggle.isOn = readyState;
 	}
 
