@@ -7,7 +7,7 @@ public class CarryOverheadBehaviour : NetworkBehaviour {
 	[SyncVar]
 	private bool isCarryingItem;
 
-	private GameObject carryingItem;
+	private GameObject m_carryingItem;
 
 	// Returns true if taken, false otherwise.
 	public bool TakeItem(ItemBehaviour item) {
@@ -20,10 +20,9 @@ public class CarryOverheadBehaviour : NetworkBehaviour {
 		// start carrying the item;
 		float spriteOffset = G.get().CARRY_OVERHEAD_OFFSET_Y + 
 			gameObject.GetComponent<Collider2D>().bounds.size.y / 2.0f;
-		carryingItem = (GameObject) Instantiate(item.itemIconPrefab);
-		carryingItem.transform.parent = transform;
-		carryingItem.transform.localPosition = new Vector3(0.0f, spriteOffset, 0.0f);
-		NetworkServer.Spawn(carryingItem);
+		m_carryingItem = (GameObject) Instantiate(item.itemIconPrefab);
+		NetworkServer.Spawn(m_carryingItem);
+		RpcCarryingItemInit(m_carryingItem, this.gameObject, spriteOffset);
 
 		isCarryingItem = true;
 
@@ -39,6 +38,13 @@ public class CarryOverheadBehaviour : NetworkBehaviour {
 			return;
 
 		isCarryingItem = false;
-		Destroy(carryingItem);
+		Destroy(m_carryingItem);
+	}
+
+	[ClientRpc]
+	void RpcCarryingItemInit(GameObject carryingItem, GameObject parent, float spriteOffset) {
+		Debug.Log ("carryingItem:" + carryingItem);
+		carryingItem.transform.parent = parent.transform;
+		carryingItem.transform.localPosition = new Vector3(0.0f, spriteOffset, 0.0f);
 	}
 }
