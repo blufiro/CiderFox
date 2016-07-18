@@ -6,6 +6,7 @@ public class AltarBehavior : NetworkBehaviour {
 
 	public GameController gameController;
 	public AltarLightBehavior[] altarLights;
+	public Animator animator;
 
 	public AudioClip sfx_cider_altar;
 	public AudioClip sfx_altar_score;
@@ -57,6 +58,7 @@ public class AltarBehavior : NetworkBehaviour {
 	[ClientRpc]
 	void RpcCiderReceived() {
 		gameController.PlayAudio(sfx_cider_altar);
+		animator.SetTrigger("ReceiveCider");
 	}
 
 	[ClientRpc]
