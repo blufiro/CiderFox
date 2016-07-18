@@ -4,15 +4,15 @@ using System.Collections;
 [System.Serializable]
 public struct Direction
 {
-	public static Direction NONE = new Direction(0, 0.0f, 0.0f);
-	public static Direction RIGHT = new Direction(1, 1.0f, 0.0f);
-	public static Direction UP_RIGHT = new Direction(2, 1.0f, -1.0f);
-	public static Direction UP = new Direction(3, 0.0f, -1.0f);
-	public static Direction UP_LEFT = new Direction(4, -1.0f, -1.0f);
-	public static Direction LEFT = new Direction(5, -1.0f, 0.0f);
-	public static Direction DOWN_LEFT = new Direction(6, -1.0f, 1.0f);
-	public static Direction DOWN = new Direction(7, 0.0f, 1.0f);
-	public static Direction DOWN_RIGHT = new Direction(8, 1.0f, 1.0f);
+	public static Direction NONE = new Direction(0, 0.0f, 0.0f, "none");
+	public static Direction RIGHT = new Direction(1, 1.0f, 0.0f, "east");
+	public static Direction UP_RIGHT = new Direction(2, 1.0f, -1.0f, "northeast");
+	public static Direction UP = new Direction(3, 0.0f, -1.0f, "north");
+	public static Direction UP_LEFT = new Direction(4, -1.0f, -1.0f, "northwest");
+	public static Direction LEFT = new Direction(5, -1.0f, 0.0f, "west");
+	public static Direction DOWN_LEFT = new Direction(6, -1.0f, 1.0f, "southwest");
+	public static Direction DOWN = new Direction(7, 0.0f, 1.0f, "south");
+	public static Direction DOWN_RIGHT = new Direction(8, 1.0f, 1.0f, "southeast");
 
 	private static Direction[] directionsArray = new Direction[9] {
 		NONE,
@@ -48,10 +48,12 @@ public struct Direction
 	private int m_index;
 	private Vector2 m_xy;
 	private Vector3 m_xyz;
-	private Direction(int index, float x, float y) {
+	private string m_name;
+	private Direction(int index, float x, float y, string name) {
 		m_index = index;
 		m_xy = new Vector2(x,y);
 		m_xyz = new Vector3(x,y,0);
+		m_name = name;
 	}
 
 	public int toInt() {
@@ -64,5 +66,9 @@ public struct Direction
 
 	public Vector3 toVector3() {
 		return m_xyz;
+	}
+
+	public string name() {
+		return m_name;
 	}
 }

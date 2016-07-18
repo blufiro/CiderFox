@@ -44,7 +44,7 @@ public class PlayerBehaviour : NetworkBehaviour {
 			if (GetComponent<Collider2D>().OverlapPoint(touchWorldPos)) {
 				tapBegin = Input.mousePosition;
 				isAiming = true;
-    			CmdStopAndAim();
+    			CmdStop(transform.position, facing.toInt());
     		} else {
 				isAiming = false;
 				GameObject newTarget = Instantiate(target);
@@ -73,13 +73,17 @@ public class PlayerBehaviour : NetworkBehaviour {
 		Vector2 currPos = transform.position;
 		Vector2 toDestination = destination - currPos;
 		float distance = toDestination.sqrMagnitude;
-		if (distance > 0) {
+		if (distance > 0.001f) {
 			Vector2 moveVec = toDestination;
 			if (distance > G.get().PLAYER_MOVE_SPEED * G.get().PLAYER_MOVE_SPEED) {
 				toDestination.Normalize();
 				moveVec = toDestination * G.get().PLAYER_MOVE_SPEED;
+				walk(moveVec);
+			} else {
+				stopAtDestination();
 			}
-			walk(moveVec);
+
+
 		}
 	}
 
@@ -131,8 +135,8 @@ public class PlayerBehaviour : NetworkBehaviour {
 //    }
 
     private void walk(Vector2 moveVec) {
-		Vector3 newPosition = moveVec;
-		rigidBody.MovePosition(transform.position + newPosition);
+		Vector3 moveVec3 = moveVec;
+		rigidBody.MovePosition(transform.position + moveVec3);
 		Direction newFacing = Direction.get(moveVec);
 		lazyUpdateFacing(newFacing);
     }
@@ -142,14 +146,21 @@ public class PlayerBehaviour : NetworkBehaviour {
     		CmdUpdateFacing(newFacing.toInt());
     	}
     }
+	private void stopAtDestination() {
+    	rigidBody.MovePosition(destination);
+		CmdStop(destination, facing.toInt());
+    }
 
-	[Command]
-	void CmdUpdateFacing(int newFacing) {
+    private void updateFacing (int newFacing) {
 		Debug.Log("update facing newFacing: " + newFacing + " from : " + networkFacing);
     	networkFacing = newFacing;
     	facing = Direction.fromInt(networkFacing);
 		animator.SetInteger("Direction", networkFacing);
+    }
 
+	[Command]
+	void CmdUpdateFacing(int newFacing) {
+		updateFacing(newFacing);
     }
 
     [Client]
@@ -159,15 +170,22 @@ public class PlayerBehaviour : NetworkBehaviour {
 	}
 
 	[Command]
-	void CmdStopAndAim() {
-		Debug.Log("Stop And Aim");
-		destination = transform.position;
-
+	void CmdStop(Vector2 position, int newFacing) {
+		Debug.Log("CmdStop at position: " + position + " facing: " + newFacing);
+		destination = position;
+		rigidBody.MovePosition(destination);
+		updateFacing(newFacing);
+		animator.enabled = false;
 	}
 
 	[Command]
-	void CmdMove(Vector2 dest) {
-		Debug.Log("Move to dest " + dest.x + " "+dest.y);
-		destination = dest;
+	void CmdMove(Vector2 newDestination) {
+		Debug.Log("Move to dest " + newDestination);
+		destination = newDestination;
+		Vector2 curr_pos = transform.position;
+		Direction direction = Direction.get(destination - curr_pos);
+		updateFacing(direction.toInt());
+		Debug.Log("play with direction: player_walk_" + direction.name());
+		animator.enabled = true;
 	}
 }
