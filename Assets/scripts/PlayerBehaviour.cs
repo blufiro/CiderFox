@@ -152,7 +152,7 @@ public class PlayerBehaviour : NetworkBehaviour {
     }
 
     private void updateFacing (int newFacing) {
-		Debug.Log("update facing newFacing: " + newFacing + " from : " + networkFacing);
+		// Debug.Log("update facing newFacing: " + newFacing + " from : " + networkFacing);
     	networkFacing = newFacing;
     	facing = Direction.fromInt(networkFacing);
 		animator.SetInteger("Direction", networkFacing);
@@ -171,7 +171,7 @@ public class PlayerBehaviour : NetworkBehaviour {
 
 	[Command]
 	void CmdStop(Vector2 position, int newFacing) {
-		Debug.Log("CmdStop at position: " + position + " facing: " + newFacing);
+		// Debug.Log("CmdStop at position: " + position + " facing: " + newFacing);
 		destination = position;
 		rigidBody.MovePosition(destination);
 		updateFacing(newFacing);
@@ -180,12 +180,12 @@ public class PlayerBehaviour : NetworkBehaviour {
 
 	[Command]
 	void CmdMove(Vector2 newDestination) {
-		Debug.Log("Move to dest " + newDestination);
+		// Debug.Log("Move to dest " + newDestination);
 		destination = newDestination;
 		Vector2 curr_pos = transform.position;
 		Direction direction = Direction.get(destination - curr_pos);
 		updateFacing(direction.toInt());
-		Debug.Log("play with direction: player_walk_" + direction.name());
+		// Debug.Log("play with direction: player_walk_" + direction.name());
 		animator.enabled = true;
 	}
 }
