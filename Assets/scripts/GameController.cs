@@ -24,6 +24,7 @@ public class GameController : NetworkBehaviour {
 	private Vector2 originalBarDim;
 	private float clientTimeElapsed;
 	private bool isGameOver;
+	private int numThiefRanAway;
 	private AudioSource[] audioSources;
 	private int nextAudioSource;
 
@@ -106,8 +107,8 @@ public class GameController : NetworkBehaviour {
         {
         	float randAngle = Random.Range(0.0f, 2 * Mathf.PI);
             var pos = new Vector3(
-				G.SAFE_SPAWN_RADIUS * Mathf.Cos(randAngle),
-				G.SAFE_SPAWN_RADIUS * Mathf.Sin(randAngle),
+				G.SAFE_SPAWN_RADIUS * Mathf.Cos(randAngle) + Random.value * G.SPAWN_RAND_EXTRA_RADIUS,
+				G.SAFE_SPAWN_RADIUS * Mathf.Sin(randAngle) + Random.value * G.SPAWN_RAND_EXTRA_RADIUS,
 				0.0f);
 
             var rotation = Quaternion.identity; //Euler( Random.Range(0,180), Random.Range(0,180), Random.Range(0,180));
@@ -156,6 +157,10 @@ public class GameController : NetworkBehaviour {
 		audioSources [freeIndex].clip = clip;
 		audioSources [freeIndex].Play ();
 		nextAudioSource = (freeIndex + 1) % G.MAX_AUDIO_SOURCES;
+	}
+
+	public void OnThiefRanAway() {
+		numThiefRanAway++;
 	}
 
 	private void ScoreUpdated(int score) {

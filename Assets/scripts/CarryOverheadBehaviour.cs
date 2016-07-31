@@ -10,7 +10,7 @@ public class CarryOverheadBehaviour : NetworkBehaviour {
 	private GameObject m_carryingItem;
 
 	// Returns true if taken, false otherwise.
-	public bool TakeItem(ItemBehaviour item) {
+	public bool TakeItem(ItemBehaviour itemBehavior) {
 		if (!isServer)
 			return false;
 
@@ -20,7 +20,7 @@ public class CarryOverheadBehaviour : NetworkBehaviour {
 		// start carrying the item;
 		float spriteOffset = G.get().CARRY_OVERHEAD_OFFSET_Y + 
 			gameObject.GetComponent<Collider2D>().bounds.size.y / 2.0f;
-		m_carryingItem = (GameObject) Instantiate(item.itemIconPrefab);
+		m_carryingItem = (GameObject) Instantiate(itemBehavior.itemIconPrefab);
 		NetworkServer.Spawn(m_carryingItem);
 		RpcCarryingItemInit(m_carryingItem, this.gameObject, spriteOffset);
 

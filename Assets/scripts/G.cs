@@ -13,8 +13,9 @@ public class G
 	public const int HALF_WORLD_WIDTH = WORLD_WIDTH / 2;
 	public const int HALF_WORLD_HEIGHT = WORLD_HEIGHT / 2;
 	public const int MAX_AUDIO_SOURCES = 16;
-	public const int SAFE_SPAWN_RADIUS = G.HALF_WORLD_WIDTH + G.HALF_WORLD_HEIGHT;
 
+	public const int SAFE_SPAWN_RADIUS = G.HALF_WORLD_WIDTH + G.HALF_WORLD_HEIGHT;
+	public const float SPAWN_RAND_EXTRA_RADIUS = 300;
 	public float ARROW_SPEED = 1000; // pixels per second
 	public float ARROW_LIFE = 1.0f; // seconds
 	public int ARROW_DAMAGE = 1;

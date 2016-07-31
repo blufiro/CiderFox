@@ -17,7 +17,7 @@ public class ItemPlace : NetworkBehaviour {
 		}
 	}
 
-	void TakeCarriedItem(CarryOverheadBehaviour itemBearer) {
+	private void TakeCarriedItem(CarryOverheadBehaviour itemBearer) {
 		if (!isServer) {
 			return;
 		}
