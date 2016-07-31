@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class G
 {
@@ -11,12 +12,14 @@ public class G
 	public const int WORLD_HEIGHT = 720;
 	public const int HALF_WORLD_WIDTH = WORLD_WIDTH / 2;
 	public const int HALF_WORLD_HEIGHT = WORLD_HEIGHT / 2;
-	public const int MAX_AUDIO_SOURCES = 12;
+	public const int MAX_AUDIO_SOURCES = 16;
+	public const int SAFE_SPAWN_RADIUS = G.HALF_WORLD_WIDTH + G.HALF_WORLD_HEIGHT;
 
 	public float ARROW_SPEED = 1000; // pixels per second
 	public float ARROW_LIFE = 1.0f; // seconds
 	public int ARROW_DAMAGE = 1;
 	public float PLAYER_MOVE_SPEED = 100.0f/60.0f; // pixels per second
+	public float THIEF_MOVE_SPEED = 90.0f/60.0f; // pixels per second
 	public int MAX_SPAWN_ATTEMPTS = 5;
 	public float LIGHT_OFF_DELAY = 5.0f; //seconds
 	public float CIDER_PRODUCE_DELAY = 30.0f; // seconds

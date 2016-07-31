@@ -7,20 +7,12 @@ public class EnemyBehaviour : NetworkBehaviour {
 	[SyncVar]
 	public int health;
 
-	// Use this for initialization
-	void Start () {
-		
+	void Update() {
+		if (health <= 0) {
+			SendMessage("OnDefeat", transform.position, SendMessageOptions.DontRequireReceiver);
+			Destroy(this.gameObject);
+		}
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
-	public override void OnStartLocalPlayer()
-    {
-        health = 1;
-    }
 
 	public void TakeDamage(int damage) {
 		if (!isServer)
@@ -28,8 +20,5 @@ public class EnemyBehaviour : NetworkBehaviour {
 
 		health -= damage;
 		Debug.Log("hit enemy");
-		if (health <= 0) {
-			Destroy(gameObject);
-		}
 	}
 }

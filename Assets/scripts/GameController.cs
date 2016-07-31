@@ -12,6 +12,7 @@ public class GameController : NetworkBehaviour {
 	public GameObject gameOver;
 	public Text gameOverScoreText;
 	public NetworkManager networkManager;
+	public GameObject enemyPrefab;
 
 	[SyncVar(hook="ScoreUpdated")]
 	private int score;
@@ -55,6 +56,10 @@ public class GameController : NetworkBehaviour {
 			OnGameOver(0);
 		}
 
+		if (Input.GetKeyUp(KeyCode.E)) {
+			RpcSpawnEnemies(3);
+		}
+
 		if (!isServer) 
 			return;
 
@@ -94,6 +99,25 @@ public class GameController : NetworkBehaviour {
 		gameOver.SetActive(true);
 		clientTimeElapsed = G.get().GOD_ANGRY_DURATION;
 	}
+
+	[ClientRpc]
+	void RpcSpawnEnemies(int numEnemies) {
+		for (int i=0; i < numEnemies; i++)
+        {
+        	float randAngle = Random.Range(0.0f, 2 * Mathf.PI);
+            var pos = new Vector3(
+				G.SAFE_SPAWN_RADIUS * Mathf.Cos(randAngle),
+				G.SAFE_SPAWN_RADIUS * Mathf.Sin(randAngle),
+				0.0f);
+
+            var rotation = Quaternion.identity; //Euler( Random.Range(0,180), Random.Range(0,180), Random.Range(0,180));
+
+            var enemy = (GameObject)Instantiate(enemyPrefab, pos, rotation);
+			// enemy.transform.parent = world.transform;
+            NetworkServer.Spawn(enemy);
+            // TODO store references to spawned enemies
+        }
+   }
 
 	[Command]
 	public void CmdDisconnect() {

@@ -12,7 +12,7 @@ public class AltarBehavior : NetworkBehaviour {
 	public AudioClip sfx_altar_score;
 
 	int numCiders = 0;
-	int level = 1;
+	int numRocketsSent = 0;
 
     void Update() {
     	if (!isServer)
@@ -27,7 +27,7 @@ public class AltarBehavior : NetworkBehaviour {
     	}
 
     	if (allLightsOn) {
-    		OnLevelUp();
+    		OnSendRocket();
     	}
     }
 
@@ -42,15 +42,15 @@ public class AltarBehavior : NetworkBehaviour {
 		gameController.RpcShowWalkInstruction();
 	}
 
-	void OnLevelUp() {
+	void OnSendRocket() {
 		if (!isServer) 
 			return;
 
 		gameController.addScore(numCiders * numCiders);
 
 		numCiders = 0;
-		level++;
-		RpcOnLevelUp ();
+		numRocketsSent++;
+		RpcOnSendRocket ();
 
 		gameController.RpcShowBringCiderInstruction();
 	}
@@ -62,7 +62,7 @@ public class AltarBehavior : NetworkBehaviour {
 	}
 
 	[ClientRpc]
-	void RpcOnLevelUp() {
+	void RpcOnSendRocket() {
 		gameController.PlayAudio(sfx_altar_score);
 	}
 }
