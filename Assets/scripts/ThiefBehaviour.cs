@@ -5,6 +5,7 @@ using System.Collections;
 public class ThiefBehaviour : EnemyBehaviour {
 
 	public ItemBehaviour ciderPrefab;
+	public float idleRandomRadius;
 
 	public enum ThiefState {
 		LOCATE_CIDER,
@@ -19,8 +20,10 @@ public class ThiefBehaviour : EnemyBehaviour {
 	public ThiefState state;
 	Vector3 altarPosition;
 	AltarBehavior altarBehavior;
-	Vector3 runAwayPosition;
+	Vector3 targetPosition;
+	Vector3 idleAnchorPosition;
 	CarryOverheadBehaviour carryOverheadBehaviour;
+	Rigidbody2D rigidBody;
 
 	// Use this for initialization
 	void Start () {
@@ -30,6 +33,7 @@ public class ThiefBehaviour : EnemyBehaviour {
 		altarPosition = target.transform.position;
 		altarBehavior = target.GetComponent<AltarBehavior>();
 		carryOverheadBehaviour = gameObject.GetComponent<CarryOverheadBehaviour>();
+		rigidBody = gameObject.GetComponent<Rigidbody2D>();
 	}
 	
 	// Update is called once per frame
@@ -38,16 +42,10 @@ public class ThiefBehaviour : EnemyBehaviour {
 			return;
 
 		switch(state) {
-			case ThiefState.LOCATE_CIDER:
-				if (altarBehavior.HasCider()) {
-					changeState(ThiefState.MOVE_TO_CIDER);
-				} else {
-					changeState(ThiefState.IDLE_WHEN_NO_CIDER);
-				}
-			break;
-			case ThiefState.IDLE_WHEN_NO_CIDER: IdleWhenNoCider(); break;
+			case ThiefState.LOCATE_CIDER: UpdateLocateCider(); break;
+			case ThiefState.IDLE_WHEN_NO_CIDER: UpdateIdleWhenNoCider(); break;
 			case ThiefState.MOVE_TO_CIDER: UpdateMoveToCider(); break;
-			case ThiefState.GRAB_CIDER: GrabCider(); break;
+			case ThiefState.GRAB_CIDER: UpdateGrabCider(); break;
 			case ThiefState.RUN_AWAY: UpdateRunAway(); break;
 			case ThiefState.RUN_AWAY_SUCCESS: UpdateRunAwaySuccess(); break;
 			case ThiefState.DEAD: Die(); break;
@@ -55,22 +53,41 @@ public class ThiefBehaviour : EnemyBehaviour {
 	}
 
 	private void changeState(ThiefState newState) {
+		if (state == newState) {
+			return;
+		}
 		state = newState;
 		switch(state) {
 			case ThiefState.LOCATE_CIDER: break;
-			case ThiefState.IDLE_WHEN_NO_CIDER: break;
+			case ThiefState.IDLE_WHEN_NO_CIDER: {
+				// Only change anchor if too far away from previous target.
+				if ((idleAnchorPosition - transform.position).sqrMagnitude > idleRandomRadius * idleRandomRadius) {
+					idleAnchorPosition = transform.position; 
+				}
+				targetPosition = idleAnchorPosition + (Vector3) G.RandCircle(idleRandomRadius);
+			}
+			break;
 			case ThiefState.MOVE_TO_CIDER: break;
 			case ThiefState.GRAB_CIDER: break;
-			case ThiefState.RUN_AWAY: break;
+			case ThiefState.RUN_AWAY: {
+				// TODO Make this smarter by running away from players?
+				targetPosition = G.RandCircle(G.SAFE_SPAWN_RADIUS);
+			}
+			break;
 			case ThiefState.DEAD: break;
 		}
 	}
 
-	private void IdleWhenNoCider() {
-		// TODO add idle movement
+	private void UpdateLocateCider() {
+		if (altarBehavior.HasCider()) {
+			changeState(ThiefState.MOVE_TO_CIDER);
+		} else {
+			changeState(ThiefState.IDLE_WHEN_NO_CIDER);
+		}
+	}
 
-		// After some movement, go back into checking state.
-		changeState(ThiefState.LOCATE_CIDER);
+	private void UpdateIdleWhenNoCider() {
+		MoveToTarget(targetPosition, ThiefState.LOCATE_CIDER);
 	}
 
 	private void UpdateMoveToCider() {
@@ -82,7 +99,7 @@ public class ThiefBehaviour : EnemyBehaviour {
 	}
 
 	private void UpdateRunAway() {
-		MoveToTarget(runAwayPosition, ThiefState.RUN_AWAY_SUCCESS);
+		MoveToTarget(targetPosition, ThiefState.RUN_AWAY_SUCCESS);
 	}
 
 	private void UpdateRunAwaySuccess() {
@@ -105,7 +122,7 @@ public class ThiefBehaviour : EnemyBehaviour {
 		}
 	}
 
-	private void GrabCider() {
+	private void UpdateGrabCider() {
 		if (!altarBehavior.HasCider()) {
 			changeState(ThiefState.LOCATE_CIDER);
 			return;
@@ -113,13 +130,6 @@ public class ThiefBehaviour : EnemyBehaviour {
 
 		carryOverheadBehaviour.TakeItem(ciderPrefab);
 		altarBehavior.gameObject.SendMessage("OnStealItem");
-		
-		// TODO Make this smarter by running away from players?
-		float randAngle = Random.Range(0.0f, 2 * Mathf.PI);
-        runAwayPosition = new Vector3(
-			G.SAFE_SPAWN_RADIUS * Mathf.Cos(randAngle),
-			G.SAFE_SPAWN_RADIUS * Mathf.Sin(randAngle),
-			0.0f);
 		changeState(ThiefState.RUN_AWAY);
 	}
 

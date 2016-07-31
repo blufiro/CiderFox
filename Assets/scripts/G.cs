@@ -34,4 +34,17 @@ public class G
 	public static G get() {
 		return instance;
 	}
+
+	public static Vector2 RandCircle(float radius) {
+		float randAngle = Random.Range(0.0f, 2 * Mathf.PI);
+        return new Vector2(
+			radius * Mathf.Cos(randAngle),
+			radius * Mathf.Sin(randAngle));
+	}
+
+	public static Vector2 RandVec2(float axisLength) {
+		return new Vector2(
+			Random.value * axisLength,
+			Random.value * axisLength);
+	}
 }

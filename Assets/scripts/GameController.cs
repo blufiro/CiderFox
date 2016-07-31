@@ -105,12 +105,7 @@ public class GameController : NetworkBehaviour {
 	void RpcSpawnEnemies(int numEnemies) {
 		for (int i=0; i < numEnemies; i++)
         {
-        	float randAngle = Random.Range(0.0f, 2 * Mathf.PI);
-            var pos = new Vector3(
-				G.SAFE_SPAWN_RADIUS * Mathf.Cos(randAngle) + Random.value * G.SPAWN_RAND_EXTRA_RADIUS,
-				G.SAFE_SPAWN_RADIUS * Mathf.Sin(randAngle) + Random.value * G.SPAWN_RAND_EXTRA_RADIUS,
-				0.0f);
-
+			var pos = G.RandCircle(G.SAFE_SPAWN_RADIUS) + G.RandVec2(G.SPAWN_RAND_EXTRA_RADIUS);
             var rotation = Quaternion.identity; //Euler( Random.Range(0,180), Random.Range(0,180), Random.Range(0,180));
 
             var enemy = (GameObject)Instantiate(enemyPrefab, pos, rotation);
