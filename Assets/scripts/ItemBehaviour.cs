@@ -14,11 +14,13 @@ public class ItemBehaviour : NetworkBehaviour {
 			return;
 
 		var hitBearer = collision.gameObject.GetComponent<CarryOverheadBehaviour>();
+		Debug.Log("hitBearer " + hitBearer);
 		if (hitBearer != null) {
 			if (hitBearer.TakeItem(this)) {
 				if (OnTaken != null) {
 					OnTaken();
 				}
+				Debug.Log("ItemBehavior destroy");
 				Destroy(gameObject);
 			}
 		}

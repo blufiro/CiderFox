@@ -2,6 +2,7 @@
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GameController : NetworkBehaviour {
 
@@ -43,7 +44,7 @@ public class GameController : NetworkBehaviour {
 
 	public override void OnStartServer()
     {
-		resetScore();
+		ResetScore();
     }
 
 	// Update is called once per frame
@@ -120,16 +121,10 @@ public class GameController : NetworkBehaviour {
 		networkManager.StopHost();
 	}
 
-	public void addScore(int points) {
+	public void AddScore(int points) {
 		if (!isServer)
 			return;
 		score += points;
-	}
-
-	public void resetScore() {
-		if (!isServer)
-			return;
-		score = 0;
 	}
 
 	public void OnGameOver(int finalScore) {
@@ -156,6 +151,10 @@ public class GameController : NetworkBehaviour {
 
 	public void OnThiefRanAway() {
 		numThiefRanAway++;
+	}
+
+	private void ResetScore() {
+		score = 0;
 	}
 
 	private void ScoreUpdated(int score) {

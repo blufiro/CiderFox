@@ -10,7 +10,7 @@ public class ItemPlace : NetworkBehaviour {
 
 		var hitItemBearer = collision.gameObject.GetComponent<CarryOverheadBehaviour>();
 		if (hitItemBearer != null) {
-			Debug.Log("hit carry overhaeed");
+			Debug.Log("ItemPlace hit carry overhaeed");
 			if (!hitItemBearer.IsCarryingItem())
 				return;
 			TakeCarriedItem(hitItemBearer);
@@ -22,7 +22,7 @@ public class ItemPlace : NetworkBehaviour {
 			return;
 		}
 
-		Debug.Log("TakeCarriedItem");
+		Debug.Log("ItemPlace TakeCarriedItem");
 		itemBearer.RemoveCarriedItem();
 		// TODO (can send over item id)
 		gameObject.SendMessage("OnReceiveItem");

@@ -2,9 +2,8 @@
 using UnityEngine.Networking;
 using System.Collections;
 
-public class AltarBehavior : NetworkBehaviour {
+public class AltarBehavior : NetworkBehaviour, ItemSource {
 
-	public GameController gameController;
 	public AltarLightBehavior[] altarLights;
 	public Animator animator;
 
@@ -15,9 +14,23 @@ public class AltarBehavior : NetworkBehaviour {
 	int numCiders = 0;
 	int numRocketsSent = 0;
 
-	public bool HasCider() {
+	public bool HasItem() {
     	return numCiders > 0;
     }
+
+	public Vector3 GetItemPosition() {
+    	return transform.position;
+    }
+
+	public void OnStealItem() {
+		if (!isServer)
+			return;
+		numCiders--;
+		if (numCiders < 0) {
+			throw new UnityException("Num ciders should never be less than 0");
+		}
+		Debug.Log("OnStealItem numCiders: " + numCiders);
+	}
 
     void Update() {
     	if (!isServer)
@@ -44,17 +57,7 @@ public class AltarBehavior : NetworkBehaviour {
 		RpcCiderReceived ();
 		Debug.Log("numCiders: " + numCiders);
 
-		gameController.RpcShowWalkInstruction();
-	}
-
-	void OnStealItem() {
-		if (!isServer)
-			return;
-		numCiders--;
-		if (numCiders < 0) {
-			throw new UnityException("Num ciders should never be less than 0");
-		}
-		Debug.Log("OnStealItem numCiders: " + numCiders);
+		G.get().gameController.RpcShowWalkInstruction();
 	}
 
 	void OnSendRocket() {
@@ -65,28 +68,28 @@ public class AltarBehavior : NetworkBehaviour {
 			return;
 		}
     			
-		gameController.addScore(numCiders * numCiders);
+		G.get().gameController.AddScore(numCiders * numCiders);
 
 		numCiders = 0;
 		numRocketsSent++;
 		RpcOnSendRocket ();
 
-		gameController.RpcShowBringCiderInstruction();
+		G.get().gameController.RpcShowBringCiderInstruction();
 	}
 
 	[ClientRpc]
 	void RpcCiderReceived() {
-		gameController.PlayAudio(sfx_cider_altar);
+		G.get().gameController.PlayAudio(sfx_cider_altar);
 		animator.SetTrigger("ReceiveCider");
 	}
 
 	[ClientRpc]
 	void RpcOnSendRocket() {
-		gameController.PlayAudio(sfx_altar_score);
+		G.get().gameController.PlayAudio(sfx_altar_score);
 	}
 
 	[ClientRpc]
 	void RpcOnFailRocket() {
-		gameController.PlayAudio(sfx_altar_fail);
+		G.get().gameController.PlayAudio(sfx_altar_fail);
 	}
 }

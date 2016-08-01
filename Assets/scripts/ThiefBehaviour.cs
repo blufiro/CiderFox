@@ -18,22 +18,16 @@ public class ThiefBehaviour : EnemyBehaviour {
 	}
 	// Public For debugging
 	public ThiefState state;
-	Vector3 altarPosition;
-	AltarBehavior altarBehavior;
+	ItemSource ciderSource;
 	Vector3 targetPosition;
 	Vector3 idleAnchorPosition;
 	CarryOverheadBehaviour carryOverheadBehaviour;
-	Rigidbody2D rigidBody;
 
 	// Use this for initialization
 	void Start () {
 		state = ThiefState.LOCATE_CIDER;
-		// For now, altar never moves, so target location never changes.
-		var target = GameObject.FindGameObjectWithTag("AltarTag");
-		altarPosition = target.transform.position;
-		altarBehavior = target.GetComponent<AltarBehavior>();
+		ciderSource = null;
 		carryOverheadBehaviour = gameObject.GetComponent<CarryOverheadBehaviour>();
-		rigidBody = gameObject.GetComponent<Rigidbody2D>();
 	}
 	
 	// Update is called once per frame
@@ -79,7 +73,8 @@ public class ThiefBehaviour : EnemyBehaviour {
 	}
 
 	private void UpdateLocateCider() {
-		if (altarBehavior.HasCider()) {
+		if (G.get().ciderManager.HasCider()) {
+			ciderSource = G.get().ciderManager.GetNearestCiderPos(transform.position);
 			changeState(ThiefState.MOVE_TO_CIDER);
 		} else {
 			changeState(ThiefState.IDLE_WHEN_NO_CIDER);
@@ -91,11 +86,11 @@ public class ThiefBehaviour : EnemyBehaviour {
 	}
 
 	private void UpdateMoveToCider() {
-		if (!altarBehavior.HasCider()) {
+		if (ciderSource == null || !ciderSource.HasItem()) {
 			changeState(ThiefState.LOCATE_CIDER);
 			return;
 		}
-		MoveToTarget(altarPosition, ThiefState.GRAB_CIDER);
+		MoveToTarget(ciderSource.GetItemPosition(), ThiefState.GRAB_CIDER);
 	}
 
 	private void UpdateRunAway() {
@@ -123,13 +118,13 @@ public class ThiefBehaviour : EnemyBehaviour {
 	}
 
 	private void UpdateGrabCider() {
-		if (!altarBehavior.HasCider()) {
+		if (ciderSource == null || !ciderSource.HasItem()) {
 			changeState(ThiefState.LOCATE_CIDER);
 			return;
 		}
 
 		carryOverheadBehaviour.TakeItem(ciderPrefab);
-		altarBehavior.gameObject.SendMessage("OnStealItem");
+		ciderSource.OnStealItem();
 		changeState(ThiefState.RUN_AWAY);
 	}
 

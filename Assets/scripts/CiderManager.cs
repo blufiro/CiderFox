@@ -1,17 +1,24 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
+using System.Collections;
 using System.Collections.Generic;
 
 public class CiderManager : NetworkBehaviour {
 
-	// public GameObject world;
 	public GameObject breweryPrefab;
 	public GameObject ciderPrefab;
     public int numBreweries;
+	public AltarBehavior altar;
+
+	private List<ItemSource> ciderSources;
+
+	void Start() {
+		G.get().ciderManager = this;
+	}
 
 	public override void OnStartServer()
     {
-		var prevPositions = new List<Vector3>();
+		ciderSources = new List<ItemSource>();
 
     	Texture breweryTexture = breweryPrefab.GetComponent<SpriteRenderer>().sprite.texture;
 		int breweryWidth = breweryTexture.width;
@@ -28,7 +35,7 @@ public class CiderManager : NetworkBehaviour {
 					0.0f);
 
 				// Debug.Log("brewery pos: " + pos + " bw " + breweryWidth + " bh "+ breweryHeight);
-			} while (collidesWithPrevious(prevPositions, pos, breweryWidth, breweryHeight)
+			} while (collidesWithPrevious(pos, breweryWidth, breweryHeight)
 				&& attempts++ < G.get().MAX_SPAWN_ATTEMPTS);
 			if (attempts >= G.get().MAX_SPAWN_ATTEMPTS) {
 				// Debug.Log("Giving up spawning more brewerys after " + attempts + " attempts");
@@ -40,17 +47,42 @@ public class CiderManager : NetworkBehaviour {
 			var brewery = (GameObject)Instantiate(breweryPrefab, pos, rotation);
 			// brewery.transform.parent = world.transform;
 			NetworkServer.Spawn(brewery);
-			prevPositions.Add(pos);
+			ciderSources.Add(brewery.GetComponent<BreweryBehaviour>());
         }
+        ciderSources.Add(altar);
+    }
+
+    public bool HasCider() {
+		foreach (ItemSource source in ciderSources) {
+			if (source.HasItem()) {
+				return true;
+			}
+		}
+		return false;
+    }
+
+    public ItemSource GetNearestCiderPos(Vector3 pos) {
+    	float nearestSqrDistance = float.MaxValue;
+    	ItemSource nearestCiderSource = null;
+		foreach (ItemSource source in ciderSources) {
+			if (source.HasItem()) {
+				float sqrDistance = (source.GetItemPosition() - pos).sqrMagnitude;
+				if (sqrDistance < nearestSqrDistance) {
+					nearestCiderSource = source;
+					nearestSqrDistance = sqrDistance;
+				}
+			}
+		}
+		return nearestCiderSource;
     }
 
     private float randPosNeg(float value) {
 		return (Random.value < 0.5) ? -value : value;
     }
 
-	private bool collidesWithPrevious(List<Vector3> prevPositions, Vector3 newPos, int w, int h) {
-		foreach (Vector3 prevPos in prevPositions) {
-			Vector3 delta = prevPos - newPos;
+	private bool collidesWithPrevious(Vector3 newPos, int w, int h) {
+		foreach (ItemSource source in ciderSources) {
+			Vector3 delta = source.GetItemPosition() - newPos;
 			if (Mathf.Abs(delta.x) < w && Mathf.Abs(delta.y) < h) {
 				// Debug.Log("Collides with another brewery!" + prevPos + " "+ newPos + " "+ delta);
 				return true;

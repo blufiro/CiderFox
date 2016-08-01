@@ -29,6 +29,7 @@ public class G
 	public float SNAP_TIME_THRESHOLD = 1; // seconds
 
 	public GameController gameController;
+	public CiderManager ciderManager;
 
 	private static G instance = new G();
 	public static G get() {
