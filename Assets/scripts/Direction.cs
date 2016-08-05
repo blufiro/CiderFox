@@ -6,13 +6,13 @@ public struct Direction
 {
 	public static Direction NONE = new Direction(0, 0.0f, 0.0f, "none");
 	public static Direction RIGHT = new Direction(1, 1.0f, 0.0f, "east");
-	public static Direction UP_RIGHT = new Direction(2, 1.0f, -1.0f, "northeast");
-	public static Direction UP = new Direction(3, 0.0f, -1.0f, "north");
-	public static Direction UP_LEFT = new Direction(4, -1.0f, -1.0f, "northwest");
+	public static Direction UP_RIGHT = new Direction(2, 1.0f, 1.0f, "northeast");
+	public static Direction UP = new Direction(3, 0.0f, 1.0f, "north");
+	public static Direction UP_LEFT = new Direction(4, -1.0f, 1.0f, "northwest");
 	public static Direction LEFT = new Direction(5, -1.0f, 0.0f, "west");
-	public static Direction DOWN_LEFT = new Direction(6, -1.0f, 1.0f, "southwest");
-	public static Direction DOWN = new Direction(7, 0.0f, 1.0f, "south");
-	public static Direction DOWN_RIGHT = new Direction(8, 1.0f, 1.0f, "southeast");
+	public static Direction DOWN_LEFT = new Direction(6, -1.0f, -1.0f, "southwest");
+	public static Direction DOWN = new Direction(7, 0.0f, -1.0f, "south");
+	public static Direction DOWN_RIGHT = new Direction(8, 1.0f, -1.0f, "southeast");
 
 	private static Direction[] directionsArray = new Direction[9] {
 		NONE,

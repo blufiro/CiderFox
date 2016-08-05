@@ -104,7 +104,7 @@ public class GameController : NetworkBehaviour {
 
 	[ClientRpc]
 	void RpcSpawnEnemies(int numEnemies) {
-		for (int i=0; i < numEnemies; i++)
+		for (int i=0; i < 1; i++)
         {
 			var pos = G.RandCircle(G.SAFE_SPAWN_RADIUS) + G.RandVec2(G.SPAWN_RAND_EXTRA_RADIUS);
             var rotation = Quaternion.identity; //Euler( Random.Range(0,180), Random.Range(0,180), Random.Range(0,180));

@@ -20,14 +20,14 @@ public class PlayerBehaviour : NetworkBehaviour {
 	// private GameObject world;
 	private Vector3 tapBegin;
 	private bool isAiming;
-	private bool isAnimating;
+	private string anim_action;
 	private Animator animator;
 	private Rigidbody2D rigidBody;
 
 	// Use this for initialization
 	void Start () {
 		facing = Direction.DOWN;
-		isAnimating = false;
+		anim_action = "player_idle_";
 		// world = GameObject.Find("World");
 		// transform.parent = world.transform;
 		Input.simulateMouseWithTouches = true;
@@ -119,12 +119,14 @@ public class PlayerBehaviour : NetworkBehaviour {
     [Command]
 	void CmdAttack()
     {
-		Debug.Log("Attack");
+		// Debug.Log("Attack");
 		// create the arrow object locally
         var arrow = (GameObject)Instantiate(
             arrowPrefab,
-			transform.position - facing.toVector3(),
-			Quaternion.FromToRotation(Direction.RIGHT.toVector3(), facing.toVector3()));
+			transform.position,
+			Quaternion.AngleAxis(
+				Mathf.Rad2Deg * Mathf.Atan2(facing.toVector2().y, facing.toVector2().x),
+				Vector3.forward));
 		// arrow.transform.parent = world.transform;
 
 		// make the arrow move away in front of the player
@@ -158,14 +160,13 @@ public class PlayerBehaviour : NetworkBehaviour {
 		// Debug.Log("update facing newFacing: " + newFacing + " from : " + networkFacing);
     	networkFacing = newFacing;
     	facing = Direction.fromInt(networkFacing);
-		Debug.Log("updateFacing : " + facing);
-		animator.SetInteger("Direction", newFacing);
+		animator.Play(anim_action + facing.ToString());
     }
 
     [Client]
 	void FacingChanged(int newFacing) {
 		facing = Direction.fromInt(newFacing);
-		animator.SetInteger("Direction", newFacing);
+		animator.Play(anim_action + facing.ToString());
 	}
 
 	[Command]
@@ -179,7 +180,8 @@ public class PlayerBehaviour : NetworkBehaviour {
 		destination = position;
 		rigidBody.MovePosition(destination);
 		updateFacing(newFacing);
-		animator.Stop();
+		anim_action = "player_idle_";
+		animator.Play(anim_action + facing.ToString());
 	}
 
 	[Command]
@@ -190,6 +192,7 @@ public class PlayerBehaviour : NetworkBehaviour {
 		Direction direction = Direction.get(destination - curr_pos);
 		updateFacing(direction.toInt());
 		// Debug.Log("play with direction: player_walk_" + direction.name());
-		animator.Play("player_walk_" + direction.ToString());
+		anim_action = "player_walk_";
+		animator.Play(anim_action + facing.ToString());
 	}
 }

@@ -31,10 +31,10 @@ public class ThiefBehaviour : EnemyBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	public override void Update() {
 		if (!isServer)
 			return;
-
+		base.Update();
 		switch(state) {
 			case ThiefState.LOCATE_CIDER: UpdateLocateCider(); break;
 			case ThiefState.IDLE_WHEN_NO_CIDER: UpdateIdleWhenNoCider(); break;
