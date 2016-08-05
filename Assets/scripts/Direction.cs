@@ -68,7 +68,7 @@ public struct Direction
 		return m_xyz;
 	}
 
-	public string name() {
+	public override string ToString() {
 		return m_name;
 	}
 }

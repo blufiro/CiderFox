@@ -20,12 +20,14 @@ public class PlayerBehaviour : NetworkBehaviour {
 	// private GameObject world;
 	private Vector3 tapBegin;
 	private bool isAiming;
+	private bool isAnimating;
 	private Animator animator;
 	private Rigidbody2D rigidBody;
 
 	// Use this for initialization
 	void Start () {
 		facing = Direction.DOWN;
+		isAnimating = false;
 		// world = GameObject.Find("World");
 		// transform.parent = world.transform;
 		Input.simulateMouseWithTouches = true;
@@ -47,6 +49,7 @@ public class PlayerBehaviour : NetworkBehaviour {
     			CmdStop(transform.position, facing.toInt());
     		} else {
 				isAiming = false;
+				// Only instantiate for local player
 				GameObject newTarget = Instantiate(target);
 				// newTarget.transform.parent = world.transform;
 				newTarget.transform.position = touchWorldPos;
@@ -57,14 +60,14 @@ public class PlayerBehaviour : NetworkBehaviour {
     		}
 		} else if (Input.GetMouseButton(0)) {
 			if (isAiming) {
-				Vector2 oppositeFromDragVec = -(Input.mousePosition - tapBegin);
+				Vector2 oppositeFromDragVec = tapBegin - Input.mousePosition;
 				Direction newFacing = Direction.get(oppositeFromDragVec);
 				lazyUpdateFacing(newFacing);
     		}
 		} else if (Input.GetMouseButtonUp(0)) {
 			if (isAiming) {
 				// Called from the client but invoked on the server.
-	            // CmdFire();
+	            CmdAttack();
 				isAiming = false;
     		}
         }
@@ -113,26 +116,26 @@ public class PlayerBehaviour : NetworkBehaviour {
 			G.WORLD_HEIGHT - G.SCREEN_HEIGHT);
     }
 
-//    [Command]
-//	void CmdFire()
-//    {
-//		Debug.Log("Fire");
-//		// create the arrow object locally
-//        var arrow = (GameObject)Instantiate(
-//            arrowPrefab,
-//			transform.position - facing.toVector3(),
-//			Quaternion.FromToRotation(Direction.RIGHT.toVector3(), facing.toVector3()));
-//		// arrow.transform.parent = world.transform;
-//
-//		// make the arrow move away in front of the player
-//		arrow.GetComponent<Rigidbody2D>().velocity = facing.toVector2() * G.get().ARROW_SPEED;
-//
-//		// spawn the arrow on the clients
-//		NetworkServer.Spawn(arrow);
-//        
-//		// make arrow disappear after 2 seconds
-//		Destroy(arrow, G.get().ARROW_LIFE);
-//    }
+    [Command]
+	void CmdAttack()
+    {
+		Debug.Log("Attack");
+		// create the arrow object locally
+        var arrow = (GameObject)Instantiate(
+            arrowPrefab,
+			transform.position - facing.toVector3(),
+			Quaternion.FromToRotation(Direction.RIGHT.toVector3(), facing.toVector3()));
+		// arrow.transform.parent = world.transform;
+
+		// make the arrow move away in front of the player
+		arrow.GetComponent<Rigidbody2D>().velocity = facing.toVector2() * G.get().ARROW_SPEED;
+
+		// spawn the arrow on the clients
+		NetworkServer.Spawn(arrow);
+        
+		// make arrow disappear after 2 seconds
+		Destroy(arrow, G.get().ARROW_LIFE);
+    }
 
     private void walk(Vector2 moveVec) {
 		Vector3 moveVec3 = moveVec;
@@ -155,12 +158,8 @@ public class PlayerBehaviour : NetworkBehaviour {
 		// Debug.Log("update facing newFacing: " + newFacing + " from : " + networkFacing);
     	networkFacing = newFacing;
     	facing = Direction.fromInt(networkFacing);
-		animator.SetInteger("Direction", networkFacing);
-    }
-
-	[Command]
-	void CmdUpdateFacing(int newFacing) {
-		updateFacing(newFacing);
+		Debug.Log("updateFacing : " + facing);
+		animator.SetInteger("Direction", newFacing);
     }
 
     [Client]
@@ -170,12 +169,17 @@ public class PlayerBehaviour : NetworkBehaviour {
 	}
 
 	[Command]
+	void CmdUpdateFacing(int newFacing) {
+		updateFacing(newFacing);
+    }
+
+	[Command]
 	void CmdStop(Vector2 position, int newFacing) {
 		// Debug.Log("CmdStop at position: " + position + " facing: " + newFacing);
 		destination = position;
 		rigidBody.MovePosition(destination);
 		updateFacing(newFacing);
-		animator.enabled = false;
+		animator.Stop();
 	}
 
 	[Command]
@@ -186,6 +190,6 @@ public class PlayerBehaviour : NetworkBehaviour {
 		Direction direction = Direction.get(destination - curr_pos);
 		updateFacing(direction.toInt());
 		// Debug.Log("play with direction: player_walk_" + direction.name());
-		animator.enabled = true;
+		animator.Play("player_walk_" + direction.ToString());
 	}
 }
