@@ -1,0 +1,125 @@
+{ "frames": {
+   "rocket_anim_launch_200 0.ase": {
+    "frame": { "x": 0, "y": 0, "w": 160, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 160 },
+    "sourceSize": { "w": 160, "h": 160 },
+    "duration": 100
+   },
+   "rocket_anim_launch_200 1.ase": {
+    "frame": { "x": 160, "y": 0, "w": 160, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 160 },
+    "sourceSize": { "w": 160, "h": 160 },
+    "duration": 100
+   },
+   "rocket_anim_launch_200 2.ase": {
+    "frame": { "x": 320, "y": 0, "w": 160, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 160 },
+    "sourceSize": { "w": 160, "h": 160 },
+    "duration": 100
+   },
+   "rocket_anim_launch_200 3.ase": {
+    "frame": { "x": 480, "y": 0, "w": 160, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 160 },
+    "sourceSize": { "w": 160, "h": 160 },
+    "duration": 100
+   },
+   "rocket_anim_launch_200 4.ase": {
+    "frame": { "x": 640, "y": 0, "w": 160, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 160 },
+    "sourceSize": { "w": 160, "h": 160 },
+    "duration": 100
+   },
+   "rocket_anim_launch_200 5.ase": {
+    "frame": { "x": 800, "y": 0, "w": 160, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 160 },
+    "sourceSize": { "w": 160, "h": 160 },
+    "duration": 100
+   },
+   "rocket_anim_launch_200 6.ase": {
+    "frame": { "x": 960, "y": 0, "w": 160, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 160 },
+    "sourceSize": { "w": 160, "h": 160 },
+    "duration": 100
+   },
+   "rocket_anim_launch_200 7.ase": {
+    "frame": { "x": 1120, "y": 0, "w": 160, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 160 },
+    "sourceSize": { "w": 160, "h": 160 },
+    "duration": 100
+   },
+   "rocket_anim_launch_200 8.ase": {
+    "frame": { "x": 1280, "y": 0, "w": 160, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 160 },
+    "sourceSize": { "w": 160, "h": 160 },
+    "duration": 100
+   },
+   "rocket_anim_launch_200 9.ase": {
+    "frame": { "x": 1440, "y": 0, "w": 160, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 160 },
+    "sourceSize": { "w": 160, "h": 160 },
+    "duration": 100
+   },
+   "rocket_anim_launch_200 10.ase": {
+    "frame": { "x": 1600, "y": 0, "w": 160, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 160 },
+    "sourceSize": { "w": 160, "h": 160 },
+    "duration": 100
+   },
+   "rocket_anim_launch_200 11.ase": {
+    "frame": { "x": 1760, "y": 0, "w": 160, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 160 },
+    "sourceSize": { "w": 160, "h": 160 },
+    "duration": 100
+   },
+   "rocket_anim_launch_200 12.ase": {
+    "frame": { "x": 1920, "y": 0, "w": 160, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 160 },
+    "sourceSize": { "w": 160, "h": 160 },
+    "duration": 100
+   }
+ },
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.1.6",
+  "image": "/Users/irislim/CiderFox/Assets/textures/rocket_anim_launch.png",
+  "format": "RGBA8888",
+  "size": { "w": 2080, "h": 160 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "bottles", "opacity": 255, "blendMode": "normal" },
+   { "name": "carrier", "opacity": 255, "blendMode": "normal" },
+   { "name": "smoke", "opacity": 255, "blendMode": "normal" },
+   { "name": "rocket l", "opacity": 255, "blendMode": "normal" },
+   { "name": "rocket r", "opacity": 255, "blendMode": "normal" },
+   { "name": "chicken", "opacity": 255, "blendMode": "normal" }
+  ]
+ }
+}

@@ -1,0 +1,304 @@
+fileFormatVersion: 2
+guid: 15183573f64d740f0b6e1f0a9d213242
+timeCreated: 1468807146
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: rocket_anim_launch_0
+    21300002: rocket_anim_launch_1
+    21300004: rocket_anim_launch_2
+    21300006: rocket_anim_launch_3
+    21300008: rocket_anim_launch_4
+    21300010: rocket_anim_launch_5
+    21300012: rocket_anim_launch_6
+    21300014: rocket_anim_launch_7
+    21300016: rocket_anim_launch_8
+    21300018: rocket_anim_launch_9
+    21300020: rocket_anim_launch_10
+    21300022: rocket_anim_launch_11
+    21300024: rocket_anim_launch_12
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 2
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: rocket_anim_launch_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -41, y: 78}
+        - {x: -58, y: 56}
+        - {x: -58, y: -79}
+        - {x: 59, y: -79}
+        - {x: 59, y: 62}
+        - {x: 50, y: 78}
+    - name: rocket_anim_launch_1
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 0
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -51.961533, y: 78}
+        - {x: -56.961533, y: 63}
+        - {x: -56.961533, y: -79}
+        - {x: 60.038467, y: -79}
+        - {x: 60.038467, y: 59}
+        - {x: 47.038467, y: 78}
+    - name: rocket_anim_launch_2
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 0
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -39.923065, y: 79}
+        - {x: -54.923065, y: 49}
+        - {x: -54.923065, y: 42}
+        - {x: -57.923065, y: -9}
+        - {x: -57.923065, y: -72}
+        - {x: -51.923065, y: -78}
+        - {x: 53.076935, y: -78}
+        - {x: 59.076935, y: -75}
+        - {x: 59.076935, y: 60}
+        - {x: 47.076935, y: 79}
+    - name: rocket_anim_launch_3
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 0
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -50.884613, y: 79}
+        - {x: -56.884613, y: 63}
+        - {x: -56.884613, y: -78}
+        - {x: 62.115387, y: -78}
+        - {x: 62.115387, y: 63}
+        - {x: 49.115387, y: 79}
+    - name: rocket_anim_launch_4
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 0
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -48.84613, y: 79}
+        - {x: -62.84613, y: 51}
+        - {x: -69.84613, y: 8}
+        - {x: -69.84613, y: -79}
+        - {x: 73.15387, y: -79}
+        - {x: 73.15387, y: -14}
+        - {x: 62.15387, y: 79}
+    - name: rocket_anim_launch_5
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 0
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -47.80768, y: 79}
+        - {x: -52.80768, y: 74}
+        - {x: -68.80768, y: -27}
+        - {x: -68.80768, y: -70}
+        - {x: -64.80768, y: -79}
+        - {x: 68.19232, y: -79}
+        - {x: 74.19232, y: -77}
+        - {x: 74.19232, y: -11}
+        - {x: 58.19232, y: 79}
+    - name: rocket_anim_launch_6
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 0
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -51.769226, y: 79}
+        - {x: -68.769226, y: 7}
+        - {x: -68.769226, y: -76}
+        - {x: -64.769226, y: -79}
+        - {x: 73.230774, y: -79}
+        - {x: 73.230774, y: 67}
+        - {x: 58.230774, y: 79}
+    - name: rocket_anim_launch_7
+      rect:
+        serializedVersion: 2
+        x: 1120
+        y: 0
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -49.730713, y: 79}
+        - {x: -70.73071, y: -5}
+        - {x: -70.73071, y: -79}
+        - {x: 76.26929, y: -79}
+        - {x: 76.26929, y: -17}
+        - {x: 59.269287, y: 79}
+    - name: rocket_anim_launch_8
+      rect:
+        serializedVersion: 2
+        x: 1280
+        y: 0
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -57.69226, y: -78}
+        - {x: 62.30774, y: -78}
+        - {x: 62.30774, y: 73}
+        - {x: 61.30774, y: 79}
+        - {x: -49.69226, y: 79}
+        - {x: -57.69226, y: 63}
+    - name: rocket_anim_launch_9
+      rect:
+        serializedVersion: 2
+        x: 1440
+        y: 0
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -43.65381, y: 79}
+        - {x: -53.65381, y: 74}
+        - {x: -68.65381, y: -33}
+        - {x: -68.65381, y: -75}
+        - {x: -63.65381, y: -79}
+        - {x: 64.34619, y: -79}
+        - {x: 74.34619, y: -74}
+        - {x: 74.34619, y: -35}
+        - {x: 55.34619, y: 79}
+    - name: rocket_anim_launch_10
+      rect:
+        serializedVersion: 2
+        x: 1600
+        y: 0
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -61.615356, y: 79}
+        - {x: -68.61536, y: 76}
+        - {x: -68.61536, y: -79}
+        - {x: 74.38464, y: -79}
+        - {x: 74.38464, y: 79}
+    - name: rocket_anim_launch_11
+      rect:
+        serializedVersion: 2
+        x: 1760
+        y: 0
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -68.576904, y: -76}
+        - {x: -64.576904, y: -79}
+        - {x: 71.423096, y: -79}
+        - {x: 74.423096, y: -78}
+        - {x: 74.423096, y: 9}
+        - {x: 59.423096, y: 79}
+        - {x: -55.576904, y: 79}
+        - {x: -68.576904, y: 13}
+    - name: rocket_anim_launch_12
+      rect:
+        serializedVersion: 2
+        x: 1920
+        y: 0
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -51.538452, y: 79}
+        - {x: -70.53845, y: 0}
+        - {x: -70.53845, y: -79}
+        - {x: 76.46155, y: -79}
+        - {x: 76.46155, y: -27}
+        - {x: 61.461548, y: 79}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
