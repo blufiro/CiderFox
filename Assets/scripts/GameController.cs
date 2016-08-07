@@ -14,6 +14,7 @@ public class GameController : NetworkBehaviour {
 	public Text gameOverScoreText;
 	public NetworkManager networkManager;
 	public GameObject enemyPrefab;
+	public Wave[] waves;
 
 	[SyncVar(hook="ScoreUpdated")]
 	private int score;
@@ -28,6 +29,8 @@ public class GameController : NetworkBehaviour {
 	private int numThiefRanAway;
 	private AudioSource[] audioSources;
 	private int nextAudioSource;
+	private int currentWaveIndex;
+	private float currentWaveMinute;
 
 	void Start() {
 		G.get().gameController = this;
@@ -40,6 +43,23 @@ public class GameController : NetworkBehaviour {
 		for (int i = 0; i < G.MAX_AUDIO_SOURCES; i++) {
 			audioSources [i] = gameObject.AddComponent<AudioSource>();
 		}
+		currentWaveIndex = 0;
+		currentWaveMinute = getWaveMinute();
+#if DEBUG
+		// verify that waves are sequential in timing.
+		float previousMinute = 0.0f;
+		foreach (Wave wave in waves) {
+			if (wave.numEnemies <= 0) {
+				throw new UnityException(
+					"Waves cannot have <0 num enemies: " + wave.numEnemies);
+			}
+			if (wave.minute < previousMinute) {
+				throw new UnityException(
+					"Waves are not ordered in sequential time. Check wave minute:" + wave.minute);
+			}
+			previousMinute = wave.minute;
+		}
+#endif
 	}
 
 	public override void OnStartServer()
@@ -59,19 +79,32 @@ public class GameController : NetworkBehaviour {
 		}
 
 		if (Input.GetKeyUp(KeyCode.E)) {
-			RpcSpawnEnemies(3);
+			Wave w = new Wave();
+			w.numEnemies = 3;
+			w.minute = Time.timeSinceLevelLoad / 60.0f;
+			w.enemySpeedMultiplier = 1.0f;
+			SpawnEnemies(w);
 		}
 
 		if (!isServer) 
 			return;
 
 		if (isGameOver)
-			return;	
+			return;
 
 		serverTimeElapsed += Time.deltaTime;
 		if (serverTimeElapsed >= G.get().GOD_ANGRY_DURATION) {
 			gameObject.SendMessage("OnGameOver", score);
 			serverTimeElapsed = 0;
+		}
+
+		if (currentWaveMinute * 60.0f < serverTimeElapsed
+			&& currentWaveIndex < waves.Length) {
+			Debug.Log(currentWaveIndex +" "+currentWaveMinute);
+			Wave currentWave = waves[currentWaveIndex];
+			SpawnEnemies(currentWave);
+			currentWaveIndex++;
+			currentWaveMinute = getWaveMinute();
 		}
 	}
 
@@ -101,20 +134,6 @@ public class GameController : NetworkBehaviour {
 		gameOver.SetActive(true);
 		clientTimeElapsed = G.get().GOD_ANGRY_DURATION;
 	}
-
-	[ClientRpc]
-	void RpcSpawnEnemies(int numEnemies) {
-		for (int i=0; i < 1; i++)
-        {
-			var pos = G.RandCircle(G.SAFE_SPAWN_RADIUS) + G.RandVec2(G.SPAWN_RAND_EXTRA_RADIUS);
-            var rotation = Quaternion.identity; //Euler( Random.Range(0,180), Random.Range(0,180), Random.Range(0,180));
-
-            var enemy = (GameObject)Instantiate(enemyPrefab, pos, rotation);
-			// enemy.transform.parent = world.transform;
-            NetworkServer.Spawn(enemy);
-            // TODO store references to spawned enemies
-        }
-   }
 
 	[Command]
 	public void CmdDisconnect() {
@@ -166,6 +185,39 @@ public class GameController : NetworkBehaviour {
 			if (Mathf.Abs(clientTimeElapsed - newTimeElapsed) > G.get().SNAP_TIME_THRESHOLD) {
 				clientTimeElapsed = newTimeElapsed;
 			}
+		}
+	}
+
+	private void SpawnEnemies(Wave wave) {
+		for (int i=0; i < wave.numEnemies; i++) {
+        	switch (wave.spawnLocation) {
+        		case Wave.SpawnLocation.SCATTERED:
+        		break;
+				case Wave.SpawnLocation.TOP_RIGHT:
+        		break;
+				case Wave.SpawnLocation.TOP_LEFT:
+        		break;
+				case Wave.SpawnLocation.BOTTOM_RIGHT:
+        		break;
+				case Wave.SpawnLocation.BOTTOM_LEFT:
+        		break;
+	        }
+			var pos = G.RandCircle(G.SAFE_SPAWN_RADIUS) + G.RandVec2(G.SPAWN_RAND_EXTRA_RADIUS);
+            var rotation = Quaternion.identity; //Euler( Random.Range(0,180), Random.Range(0,180), Random.Range(0,180));
+
+            var enemy = (GameObject)Instantiate(enemyPrefab, pos, rotation);
+            enemy.GetComponent<EnemyBehaviour>().speedMultiplier = wave.enemySpeedMultiplier;
+			// enemy.transform.parent = world.transform;
+            NetworkServer.Spawn(enemy);
+            // TODO store references to spawned enemies
+        }
+	}
+
+	private float getWaveMinute() {
+		if (currentWaveIndex < waves.Length) {
+			return waves[currentWaveIndex].minute;
+		} else {
+			return float.MaxValue;
 		}
 	}
 }

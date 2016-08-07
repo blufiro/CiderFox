@@ -9,10 +9,10 @@ public class PlayerBehaviour : NetworkBehaviour {
 
 	public AudioClip sfx_player_target;
 
-
+	private string anim_action = "player_idle_";
+	private Direction facing = Direction.DOWN;
 	[SyncVar(hook="FacingChanged")]
 	private int networkFacing;
-	private Direction facing;
 
 	[SyncVar]
 	private Vector2 destination;
@@ -20,14 +20,11 @@ public class PlayerBehaviour : NetworkBehaviour {
 	// private GameObject world;
 	private Vector3 tapBegin;
 	private bool isAiming;
-	private string anim_action;
 	private Animator animator;
 	private Rigidbody2D rigidBody;
 
 	// Use this for initialization
 	void Start () {
-		facing = Direction.DOWN;
-		anim_action = "player_idle_";
 		// world = GameObject.Find("World");
 		// transform.parent = world.transform;
 		Input.simulateMouseWithTouches = true;

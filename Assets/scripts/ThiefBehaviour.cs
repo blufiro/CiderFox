@@ -107,9 +107,10 @@ public class ThiefBehaviour : EnemyBehaviour {
 		float distance = toDestination.sqrMagnitude;
 		if (distance > 0.001f) {
 			Vector2 moveVec = toDestination;
-			if (distance > G.get().THIEF_MOVE_SPEED * G.get().THIEF_MOVE_SPEED) {
+			float speed = G.get().THIEF_MOVE_SPEED * speedMultiplier;
+			if (distance > speed * speed) {
 				toDestination.Normalize();
-				moveVec = toDestination * G.get().THIEF_MOVE_SPEED;
+				moveVec = toDestination * speed;
 			}
 			this.transform.Translate(moveVec);
 		} else {
