@@ -14,6 +14,7 @@ public class GameController : NetworkBehaviour {
 	public Text gameOverScoreText;
 	public NetworkManager networkManager;
 	public GameObject enemyPrefab;
+	public GameObject ciderPrefab;
 	public Wave[] waves;
 
 	[SyncVar(hook="ScoreUpdated")]

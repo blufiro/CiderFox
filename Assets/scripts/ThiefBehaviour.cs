@@ -29,6 +29,15 @@ public class ThiefBehaviour : EnemyBehaviour {
 		ciderSource = null;
 		carryOverheadBehaviour = gameObject.GetComponent<CarryOverheadBehaviour>();
 	}
+
+	void OnDefeat() {
+		if (!isServer)
+			return;
+
+		if (carryOverheadBehaviour.IsCarryingItem()) {
+			carryOverheadBehaviour.DropCarriedItem();
+		}
+	}
 	
 	// Update is called once per frame
 	public override void Update() {

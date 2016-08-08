@@ -5,7 +5,7 @@ using System.Collections;
 public class CarryOverheadBehaviour : NetworkBehaviour {
 
 	[SyncVar]
-	private bool isCarryingItem;
+	private ItemType carryingItemType;
 
 	private GameObject m_carryingItem;
 
@@ -14,7 +14,7 @@ public class CarryOverheadBehaviour : NetworkBehaviour {
 		if (!isServer)
 			return false;
 
-		if (isCarryingItem)
+		if (IsCarryingItem())
 			return false;
 
 		// start carrying the item;
@@ -24,21 +24,39 @@ public class CarryOverheadBehaviour : NetworkBehaviour {
 		NetworkServer.Spawn(m_carryingItem);
 		RpcCarryingItemInit(m_carryingItem, this.gameObject, spriteOffset);
 
-		isCarryingItem = true;
+		carryingItemType = itemBehavior.itemType;
 
 		return true;
 	}
 
 	public bool IsCarryingItem() {
-		return isCarryingItem;
+		return carryingItemType != ItemType.NONE;
 	}
 
 	public void RemoveCarriedItem() {
 		if (!isServer)
 			return;
 
-		isCarryingItem = false;
+		carryingItemType = ItemType.NONE;
 		Destroy(m_carryingItem);
+	}
+
+	public void DropCarriedItem() {
+		if (!isServer)
+			return;
+
+		if (!IsCarryingItem())
+			return;
+
+		switch (carryingItemType) {
+		  case ItemType.CIDER: {
+			var newItem = (GameObject)Instantiate(G.get().gameController.ciderPrefab);
+			newItem.transform.position = transform.position;
+			NetworkServer.Spawn(newItem);
+		  } break;
+		}
+
+		RemoveCarriedItem();
 	}
 
 	[ClientRpc]
