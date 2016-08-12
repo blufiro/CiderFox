@@ -4,6 +4,7 @@ using System.Collections;
 
 public class ThiefBehaviour : EnemyBehaviour {
 
+	public GameObject deathPrefab;
 	public ItemBehaviour ciderPrefab;
 	public float idleRandomRadius;
 
@@ -37,6 +38,11 @@ public class ThiefBehaviour : EnemyBehaviour {
 		if (carryOverheadBehaviour.IsCarryingItem()) {
 			carryOverheadBehaviour.DropCarriedItem();
 		}
+
+		var deathGob = (GameObject)Instantiate(deathPrefab);
+		deathGob.transform.position = transform.position;
+		NetworkServer.Spawn(deathGob);
+		Destroy(deathGob, 5.0f);
 	}
 	
 	// Update is called once per frame
