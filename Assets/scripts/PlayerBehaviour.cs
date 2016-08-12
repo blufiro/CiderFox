@@ -5,6 +5,7 @@ using System.Collections;
 public class PlayerBehaviour : NetworkBehaviour {
 
 	public GameObject arrowPrefab;
+	public GameObject arrowIcon;
 	public GameObject target;
 
 	public AudioClip sfx_player_target;
@@ -29,6 +30,8 @@ public class PlayerBehaviour : NetworkBehaviour {
 		// world = GameObject.Find("World");
 		// transform.parent = world.transform;
 		Input.simulateMouseWithTouches = true;
+		isAiming = false;
+		arrowIcon.SetActive(isAiming);
 		rigidBody = GetComponent<Rigidbody2D>();
 	}
 	
@@ -44,9 +47,11 @@ public class PlayerBehaviour : NetworkBehaviour {
 			if (GetComponent<Collider2D>().OverlapPoint(touchWorldPos)) {
 				tapBegin = Input.mousePosition;
 				isAiming = true;
+				arrowIcon.SetActive(isAiming);
     			CmdStop(transform.position, facing.toInt());
     		} else {
 				isAiming = false;
+				arrowIcon.SetActive(isAiming);
 				// Only instantiate for local player
 				GameObject newTarget = Instantiate(target);
 				// newTarget.transform.parent = world.transform;
@@ -61,12 +66,14 @@ public class PlayerBehaviour : NetworkBehaviour {
 				aimVec = tapBegin - Input.mousePosition;
 				Direction newFacing = Direction.get(aimVec);
 				lazyUpdateFacing(newFacing);
+				arrowIcon.transform.localRotation = getAimRotation();
     		}
 		} else if (Input.GetMouseButtonUp(0)) {
 			if (isAiming) {
 				// Called from the client but invoked on the server.
 	            CmdAttack();
 				isAiming = false;
+				arrowIcon.SetActive(isAiming);
     		}
         }
 
@@ -122,9 +129,7 @@ public class PlayerBehaviour : NetworkBehaviour {
         var arrow = (GameObject)Instantiate(
             arrowPrefab,
 			transform.position,
-			Quaternion.AngleAxis(
-				Mathf.Rad2Deg * Mathf.Atan2(aimVec.y, aimVec.x),
-				Vector3.forward));
+			getAimRotation());
 		// arrow.transform.parent = world.transform;
 
 		// make the arrow move away in front of the player
@@ -135,6 +140,12 @@ public class PlayerBehaviour : NetworkBehaviour {
         
 		// make arrow disappear after 2 seconds
 		Destroy(arrow, G.get().ARROW_LIFE);
+    }
+
+    private Quaternion getAimRotation() {
+		return Quaternion.AngleAxis(
+				Mathf.Rad2Deg * Mathf.Atan2(aimVec.y, aimVec.x),
+				Vector3.forward);
     }
 
     private void walk(Vector2 moveVec) {
