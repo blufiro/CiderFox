@@ -19,6 +19,7 @@ public class PlayerBehaviour : NetworkBehaviour {
 
 	// private GameObject world;
 	private Vector3 tapBegin;
+	private Vector2 aimVec;
 	private bool isAiming;
 	private Animator animator;
 	private Rigidbody2D rigidBody;
@@ -57,8 +58,8 @@ public class PlayerBehaviour : NetworkBehaviour {
     		}
 		} else if (Input.GetMouseButton(0)) {
 			if (isAiming) {
-				Vector2 oppositeFromDragVec = tapBegin - Input.mousePosition;
-				Direction newFacing = Direction.get(oppositeFromDragVec);
+				aimVec = tapBegin - Input.mousePosition;
+				Direction newFacing = Direction.get(aimVec);
 				lazyUpdateFacing(newFacing);
     		}
 		} else if (Input.GetMouseButtonUp(0)) {
@@ -122,12 +123,12 @@ public class PlayerBehaviour : NetworkBehaviour {
             arrowPrefab,
 			transform.position,
 			Quaternion.AngleAxis(
-				Mathf.Rad2Deg * Mathf.Atan2(facing.toVector2().y, facing.toVector2().x),
+				Mathf.Rad2Deg * Mathf.Atan2(aimVec.y, aimVec.x),
 				Vector3.forward));
 		// arrow.transform.parent = world.transform;
 
 		// make the arrow move away in front of the player
-		arrow.GetComponent<Rigidbody2D>().velocity = facing.toVector2() * G.get().ARROW_SPEED;
+		arrow.GetComponent<Rigidbody2D>().velocity = aimVec * G.get().ARROW_SPEED;
 
 		// spawn the arrow on the clients
 		NetworkServer.Spawn(arrow);
