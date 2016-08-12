@@ -133,7 +133,9 @@ public class PlayerBehaviour : NetworkBehaviour {
 		// arrow.transform.parent = world.transform;
 
 		// make the arrow move away in front of the player
-		arrow.GetComponent<Rigidbody2D>().velocity = aimVec * G.get().ARROW_SPEED;
+		Vector2 arrowDirection = aimVec;
+		arrowDirection.Normalize();
+		arrow.GetComponent<Rigidbody2D>().velocity = arrowDirection * G.get().ARROW_SPEED;
 
 		// spawn the arrow on the clients
 		NetworkServer.Spawn(arrow);

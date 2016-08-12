@@ -16,8 +16,8 @@ public class G
 
 	public const int SAFE_SPAWN_RADIUS = G.HALF_WORLD_WIDTH + G.HALF_WORLD_HEIGHT;
 	public const float SPAWN_RAND_EXTRA_RADIUS = 300;
-	public float ARROW_SPEED = 1000/60.0f; // pixels per second
-	public float ARROW_LIFE = 1.0f; // seconds
+	public float ARROW_SPEED = 40000/60.0f; // pixels per second
+	public float ARROW_LIFE = 3.0f; // seconds
 	public int ARROW_DAMAGE = 1;
 	public float PLAYER_MOVE_SPEED = 100.0f/60.0f; // pixels per second
 	public float THIEF_MOVE_SPEED = 50.0f/60.0f; // pixels per second
