@@ -10,11 +10,12 @@ public class PlayerBehaviour : NetworkBehaviour {
 
 	public AudioClip sfx_player_target;
 
-	private string anim_action = "player_idle_";
 	private Direction facing = Direction.DOWN;
-	[SyncVar(hook="FacingChanged")]
+	private string animAction =  "player_idle_";
+	[SyncVar(hook="HookFacingChanged")]
 	private int networkFacing;
-
+	[SyncVar(hook="HookAnimActionChanged")]
+	private string networkAnimAction;
 	[SyncVar]
 	private Vector2 destination;
 
@@ -48,7 +49,7 @@ public class PlayerBehaviour : NetworkBehaviour {
 				tapBegin = Input.mousePosition;
 				isAiming = true;
 				arrowIcon.SetActive(isAiming);
-    			CmdStop(transform.position, facing.toInt());
+    			stop(transform.position);
     		} else {
 				isAiming = false;
 				arrowIcon.SetActive(isAiming);
@@ -57,7 +58,7 @@ public class PlayerBehaviour : NetworkBehaviour {
 				// newTarget.transform.parent = world.transform;
 				newTarget.transform.position = touchWorldPos;
 				Destroy(newTarget, 1.0f);
-				CmdMove(touchWorldPos);
+				move(touchWorldPos);
 				// Only play sounds for localPlayer
 				G.get().gameController.PlayAudio(sfx_player_target);
     		}
@@ -88,10 +89,8 @@ public class PlayerBehaviour : NetworkBehaviour {
 				moveVec = toDestination * G.get().PLAYER_MOVE_SPEED;
 				walk(moveVec);
 			} else {
-				stopAtDestination();
+				stop(destination);
 			}
-
-
 		}
 	}
 
@@ -99,6 +98,7 @@ public class PlayerBehaviour : NetworkBehaviour {
 		// animator needs to exist before networkFacing can take effect.
 		animator = GetComponent<Animator>();
 		networkFacing = facing.toInt();
+		networkAnimAction = animAction;
 	}
 
 	public override void OnStartClient() {
@@ -156,54 +156,110 @@ public class PlayerBehaviour : NetworkBehaviour {
 		Direction newFacing = Direction.get(moveVec);
 		lazyUpdateFacing(newFacing);
     }
+
+	// Called by localPlayer and by other clients via HookFacingChanged.
+    private void localUpdateFacing(Direction newFacing) {
+		facing = newFacing;
+		animator.Play(animAction + facing.ToString());
+    }
+
+    // Called by localPlayer to update facing lazily and tell server.
+	// Also called by server to update network SyncVar which will then inform other clients.
     private void lazyUpdateFacing(Direction newFacing) {
 		if (newFacing.toInt() != Direction.NONE.toInt()
     		&& networkFacing != newFacing.toInt()) {
-    		CmdUpdateFacing(newFacing.toInt());
+			if (isServer) {
+				// Changing SyncVar will call HookFacingChanged.
+				networkFacing = newFacing.toInt();
+			} else {
+				CmdUpdateFacing(newFacing.toInt());
+			}
+			// local player updates more quickly
+			localUpdateFacing(newFacing);
     	}
     }
-	private void stopAtDestination() {
-    	rigidBody.MovePosition(destination);
-		CmdStop(destination, facing.toInt());
+
+	// Called by localPlayer and by other clients via HookAnimActionChanged.
+	private void localUpdateAnimAction(string newAnimAction) {
+		animAction = newAnimAction;
+		animator.Play(animAction + facing.ToString());
     }
 
-    private void updateFacing (int newFacing) {
-		// Debug.Log("update facing newFacing: " + newFacing + " from : " + networkFacing);
-    	networkFacing = newFacing;
-    	facing = Direction.fromInt(networkFacing);
-		animator.Play(anim_action + facing.ToString());
+	// Called by localPlayer to update anim action lazily and tell server.
+	// Also called by server to update network SyncVar which will then inform other clients.
+    private void lazyUpdateAnimAction(string newAnimAction) {
+    	if (newAnimAction != animAction) {
+			if (isServer) {
+				networkAnimAction = newAnimAction;
+			} else {
+				CmdUpdateAnimAction(newAnimAction);
+			} 
+			// local player updates more quickly
+			localUpdateAnimAction(newAnimAction);
+    	}
     }
 
-    [Client]
-	void FacingChanged(int newFacing) {
-		facing = Direction.fromInt(newFacing);
-		animator.Play(anim_action + facing.ToString());
-	}
-
-	[Command]
-	void CmdUpdateFacing(int newFacing) {
-		updateFacing(newFacing);
-    }
-
-	[Command]
-	void CmdStop(Vector2 position, int newFacing) {
-		// Debug.Log("CmdStop at position: " + position + " facing: " + newFacing);
+	private void stop(Vector2 position) {
 		destination = position;
 		rigidBody.MovePosition(destination);
-		updateFacing(newFacing);
-		anim_action = "player_idle_";
-		animator.Play(anim_action + facing.ToString());
-	}
+		lazyUpdateFacing(facing);
+		lazyUpdateAnimAction("player_idle_");
+    }
 
-	[Command]
-	void CmdMove(Vector2 newDestination) {
-		// Debug.Log("Move to dest " + newDestination);
+	private void move(Vector2 newDestination) {
 		destination = newDestination;
 		Vector2 curr_pos = transform.position;
 		Direction direction = Direction.get(destination - curr_pos);
-		updateFacing(direction.toInt());
-		// Debug.Log("play with direction: player_walk_" + direction.name());
-		anim_action = "player_walk_";
-		animator.Play(anim_action + facing.ToString());
+		lazyUpdateFacing(direction);
+		lazyUpdateAnimAction("player_walk_");
+    }
+
+    // Called on all clients when var changes on server.
+	private void HookFacingChanged(int newFacing) {
+		// Local player should have updated.
+		if (isLocalPlayer) {
+			return;
+		}
+		localUpdateFacing(Direction.fromInt(newFacing));
 	}
+
+	// Called on all clients when var changes on server.
+	private void HookAnimActionChanged(string newAnimAction) {
+		// Local player should have updated.
+		if (isLocalPlayer) {
+			return;
+		}
+		localUpdateAnimAction(newAnimAction);
+	}
+
+	// Run on server to update facing, which will then tell other clients to update facing.
+	[Command]
+	void CmdUpdateFacing(int newFacing) {
+		networkFacing = newFacing;
+	}
+
+	// Run on server to update anim, which will then tell other clients to update anim.
+	[Command]
+	void CmdUpdateAnimAction(string newAnimAction) {
+		networkAnimAction = newAnimAction;
+	}
+
+//	[Command]
+//	void CmdStop(Vector2 position, int newFacing) {
+//		// Debug.Log("CmdStop at position: " + position + " facing: " + newFacing);
+//		destination = position;
+//		rigidBody.MovePosition(destination);
+//		lazyUpdateFacing(Direction.fromInt(newFacing));
+//		lazyUpdateAnimAction("player_idle_");
+//	}
+
+//	[Command]
+//	void CmdMove(Vector2 newDestination) {
+//		// Debug.Log("Move to dest " + newDestination);
+//		destination = newDestination;
+//		Vector2 curr_pos = transform.position;
+//		Direction direction = Direction.get(destination - curr_pos);
+//		lazyUpdateFacing(direction);
+//		lazyUpdateAnimAction("player_walk_");
+//	}
 }
