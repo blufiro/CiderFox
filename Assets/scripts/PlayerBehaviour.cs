@@ -72,7 +72,7 @@ public class PlayerBehaviour : NetworkBehaviour {
 		} else if (Input.GetMouseButtonUp(0)) {
 			if (isAiming) {
 				// Called from the client but invoked on the server.
-	            CmdAttack();
+	            CmdAttack(transform.position, aimVec);
 				isAiming = false;
 				arrowIcon.SetActive(isAiming);
     		}
@@ -122,18 +122,19 @@ public class PlayerBehaviour : NetworkBehaviour {
     }
 
     [Command]
-	void CmdAttack()
+	void CmdAttack(Vector3 position, Vector2 clientAimVec)
     {
+		this.aimVec = clientAimVec;
 		// Debug.Log("Attack");
 		// create the arrow object locally
         var arrow = (GameObject)Instantiate(
             arrowPrefab,
-			transform.position,
+			position,
 			getAimRotation());
 		// arrow.transform.parent = world.transform;
 
 		// make the arrow move away in front of the player
-		Vector2 arrowDirection = aimVec;
+		Vector2 arrowDirection = clientAimVec;
 		arrowDirection.Normalize();
 		arrow.GetComponent<Rigidbody2D>().velocity = arrowDirection * G.get().ARROW_SPEED;
 
