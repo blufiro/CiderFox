@@ -189,15 +189,14 @@ public class PlayerBehaviour : NetworkBehaviour {
 	// Called by localPlayer to update anim action lazily and tell server.
 	// Also called by server to update network SyncVar which will then inform other clients.
     private void lazyUpdateAnimAction(string newAnimAction) {
-    	if (newAnimAction != animAction) {
-			if (isServer) {
-				networkAnimAction = newAnimAction;
-			} else {
-				CmdUpdateAnimAction(newAnimAction);
-			} 
+		if (isServer && networkAnimAction != newAnimAction) {
+			networkAnimAction = newAnimAction;
+			localUpdateAnimAction(networkAnimAction);
+		} else if (animAction != newAnimAction) {
+			CmdUpdateAnimAction(newAnimAction);
 			// local player updates more quickly
 			localUpdateAnimAction(newAnimAction);
-    	}
+		}
     }
 
 	private void stop(Vector2 position) {
