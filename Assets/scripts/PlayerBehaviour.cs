@@ -67,7 +67,7 @@ public class PlayerBehaviour : NetworkBehaviour {
 				aimVec = tapBegin - Input.mousePosition;
 				Direction newFacing = Direction.get(aimVec);
 				lazyUpdateFacing(newFacing);
-				arrowIcon.transform.localRotation = getAimRotation();
+				arrowIcon.transform.localRotation = getAimRotation(this.aimVec);
     		}
 		} else if (Input.GetMouseButtonUp(0)) {
 			if (isAiming) {
@@ -127,14 +127,16 @@ public class PlayerBehaviour : NetworkBehaviour {
 		this.aimVec = clientAimVec;
 		// Debug.Log("Attack");
 		// create the arrow object locally
+		Quaternion aimRotation = getAimRotation(this.aimVec);
         var arrow = (GameObject)Instantiate(
             arrowPrefab,
 			position,
-			getAimRotation());
-		// arrow.transform.parent = world.transform;
+			aimRotation);
+		// Unity doesn't send rotation on NetworkSpawn so we have to use a SyncVar.
+		arrow.GetComponent<ArrowBehaviour>().initial_direction = aimRotation;
 
 		// make the arrow move away in front of the player
-		Vector2 arrowDirection = clientAimVec;
+		Vector2 arrowDirection = new Vector2(clientAimVec.x, clientAimVec.y);
 		arrowDirection.Normalize();
 		arrow.GetComponent<Rigidbody2D>().velocity = arrowDirection * G.get().ARROW_SPEED;
 
@@ -145,12 +147,13 @@ public class PlayerBehaviour : NetworkBehaviour {
 		Destroy(arrow, G.get().ARROW_LIFE);
     }
 
-    private Quaternion getAimRotation() {
+    private static Quaternion getAimRotation(Vector2 aim) {
 		return Quaternion.AngleAxis(
-				Mathf.Rad2Deg * Mathf.Atan2(aimVec.y, aimVec.x),
+				Mathf.Rad2Deg * Mathf.Atan2(aim.y, aim.x),
 				Vector3.forward);
     }
 
+    // TODO: figure out if we need this when we already have move()
     private void walk(Vector2 moveVec) {
 		Vector3 moveVec3 = moveVec;
 		rigidBody.MovePosition(transform.position + moveVec3);
@@ -214,6 +217,10 @@ public class PlayerBehaviour : NetworkBehaviour {
 		lazyUpdateAnimAction("player_walk_");
     }
 
+    /*************************
+     *   HOOKS
+     *************************/
+
     // Called on all clients when var changes on server.
 	private void HookFacingChanged(int newFacing) {
 		// Local player should have updated.
@@ -232,6 +239,10 @@ public class PlayerBehaviour : NetworkBehaviour {
 		localUpdateAnimAction(newAnimAction);
 	}
 
+	/*************************
+     *   COMMANDS
+     *************************/
+
 	// Run on server to update facing, which will then tell other clients to update facing.
 	[Command]
 	void CmdUpdateFacing(int newFacing) {
@@ -243,23 +254,4 @@ public class PlayerBehaviour : NetworkBehaviour {
 	void CmdUpdateAnimAction(string newAnimAction) {
 		networkAnimAction = newAnimAction;
 	}
-
-//	[Command]
-//	void CmdStop(Vector2 position, int newFacing) {
-//		// Debug.Log("CmdStop at position: " + position + " facing: " + newFacing);
-//		destination = position;
-//		rigidBody.MovePosition(destination);
-//		lazyUpdateFacing(Direction.fromInt(newFacing));
-//		lazyUpdateAnimAction("player_idle_");
-//	}
-
-//	[Command]
-//	void CmdMove(Vector2 newDestination) {
-//		// Debug.Log("Move to dest " + newDestination);
-//		destination = newDestination;
-//		Vector2 curr_pos = transform.position;
-//		Direction direction = Direction.get(destination - curr_pos);
-//		lazyUpdateFacing(direction);
-//		lazyUpdateAnimAction("player_walk_");
-//	}
 }
