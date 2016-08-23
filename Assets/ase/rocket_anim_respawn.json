@@ -1,0 +1,120 @@
+{ "frames": {
+   "rocket_anim_cider_200 #respawn 0.ase": {
+    "frame": { "x": 0, "y": 0, "w": 160, "h": 180 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 180 },
+    "sourceSize": { "w": 160, "h": 180 },
+    "duration": 100
+   },
+   "rocket_anim_cider_200 #respawn 1.ase": {
+    "frame": { "x": 160, "y": 0, "w": 160, "h": 180 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 180 },
+    "sourceSize": { "w": 160, "h": 180 },
+    "duration": 100
+   },
+   "rocket_anim_cider_200 #respawn 2.ase": {
+    "frame": { "x": 320, "y": 0, "w": 160, "h": 180 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 180 },
+    "sourceSize": { "w": 160, "h": 180 },
+    "duration": 100
+   },
+   "rocket_anim_cider_200 #respawn 3.ase": {
+    "frame": { "x": 480, "y": 0, "w": 160, "h": 180 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 180 },
+    "sourceSize": { "w": 160, "h": 180 },
+    "duration": 100
+   },
+   "rocket_anim_cider_200 #respawn 4.ase": {
+    "frame": { "x": 640, "y": 0, "w": 160, "h": 180 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 180 },
+    "sourceSize": { "w": 160, "h": 180 },
+    "duration": 100
+   },
+   "rocket_anim_cider_200 #respawn 5.ase": {
+    "frame": { "x": 800, "y": 0, "w": 160, "h": 180 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 180 },
+    "sourceSize": { "w": 160, "h": 180 },
+    "duration": 100
+   },
+   "rocket_anim_cider_200 #respawn 6.ase": {
+    "frame": { "x": 960, "y": 0, "w": 160, "h": 180 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 180 },
+    "sourceSize": { "w": 160, "h": 180 },
+    "duration": 100
+   },
+   "rocket_anim_cider_200 #respawn 7.ase": {
+    "frame": { "x": 1120, "y": 0, "w": 160, "h": 180 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 180 },
+    "sourceSize": { "w": 160, "h": 180 },
+    "duration": 100
+   },
+   "rocket_anim_cider_200 #respawn 8.ase": {
+    "frame": { "x": 1280, "y": 0, "w": 160, "h": 180 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 180 },
+    "sourceSize": { "w": 160, "h": 180 },
+    "duration": 100
+   },
+   "rocket_anim_cider_200 #respawn 9.ase": {
+    "frame": { "x": 1440, "y": 0, "w": 160, "h": 180 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 180 },
+    "sourceSize": { "w": 160, "h": 180 },
+    "duration": 100
+   },
+   "rocket_anim_cider_200 #respawn 10.ase": {
+    "frame": { "x": 1600, "y": 0, "w": 160, "h": 180 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 180 },
+    "sourceSize": { "w": 160, "h": 180 },
+    "duration": 100
+   },
+   "rocket_anim_cider_200 #respawn 11.ase": {
+    "frame": { "x": 1760, "y": 0, "w": 160, "h": 180 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 180 },
+    "sourceSize": { "w": 160, "h": 180 },
+    "duration": 100
+   }
+ },
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.1.7",
+  "image": "C:\\Users\\irisl_000\\Documents\\GitHub\\CiderFox\\Assets\\textures\\rocket_anim_respawn.png",
+  "format": "RGBA8888",
+  "size": { "w": 1920, "h": 180 },
+  "scale": "1",
+  "frameTags": [
+   { "name": "Deposit", "from": 0, "to": 9, "direction": "forward" },
+   { "name": "respawn", "from": 10, "to": 21, "direction": "forward" }
+  ],
+  "layers": [
+   { "name": "Layer 1", "opacity": 255, "blendMode": "normal" },
+   { "name": "bottles", "opacity": 255, "blendMode": "normal" },
+   { "name": "carrier", "opacity": 255, "blendMode": "normal" },
+   { "name": "rocket l", "opacity": 255, "blendMode": "normal" },
+   { "name": "rocket r", "opacity": 255, "blendMode": "normal" },
+   { "name": "chicken", "opacity": 255, "blendMode": "normal" },
+   { "name": "hole", "opacity": 255, "blendMode": "normal" }
+  ]
+ }
+}
