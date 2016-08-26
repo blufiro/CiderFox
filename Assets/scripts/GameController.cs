@@ -136,11 +136,6 @@ public class GameController : NetworkBehaviour {
 		clientTimeElapsed = G.get().GOD_ANGRY_DURATION;
 	}
 
-	[Command]
-	public void CmdDisconnect() {
-		networkManager.StopHost();
-	}
-
 	public void AddScore(int points) {
 		if (!isServer)
 			return;
@@ -151,6 +146,16 @@ public class GameController : NetworkBehaviour {
 		if (!isServer)
 			return;
 		RpcGameOver(finalScore);
+	}
+
+	public void OnLeaveGame() {
+		if (isServer) {
+			networkManager.StopHost();
+			networkManager.StopMatchMaker();
+		} else {
+			networkManager.StopClient();
+			networkManager.StopMatchMaker();
+		}
 	}
 
 	public void PlayAudio(AudioClip clip) {
