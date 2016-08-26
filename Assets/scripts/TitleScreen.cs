@@ -31,12 +31,23 @@ public class TitleScreen : MonoBehaviour {
 	public Text onlineFindJoinGameNameText;
 	public InputField onlineFindPasswordInput;
 
+	enum State {
+		TITLE,
+		NETWORK, // LAN or Online
+		LAN, // Host or Client
+		ONLINE, // Host or Find game
+		ONLINE_HOST, // Host game
+		ONLINE_FIND, // Find game
+		LOBBY, // Lobby
+		CREDITS,
+	}
 	private MyNetworkLobbyManager networkLobbyManager;
 	private NetworkMatch match;
 	private MatchDesc selectedMatchDesc;
 	private long networkId;
 	private long nodeId;
 	private bool isMatchCreator;
+	private State nextState;
 
 	void Start() {
 		// networkLobbyManager is not destroyed on load, so we have to find it
@@ -63,8 +74,11 @@ public class TitleScreen : MonoBehaviour {
 	}
 
 	public void OnClickOnline() {
-		switchState(State.ONLINE);
+		cleanUpMatchAndSwitchState(State.ONLINE);
 		Debug.Log ("networkLobbyManager: " + networkLobbyManager);
+	}
+
+	public void OnSwitchToOnline() {
 		networkLobbyManager.StartMatchMaker();
 		match = networkLobbyManager.matchMaker;
 	}
@@ -169,43 +183,26 @@ public class TitleScreen : MonoBehaviour {
 	}
 
 	public void OnClickBackToTitle() {
-		switchState(State.TITLE);
-		if (match != null) {
-			if (isMatchCreator) {
-				Debug.Log ("OnClickBackToTitle.DestroyMatch");
-				networkLobbyManager.matchMaker.DestroyMatch ((NetworkID)networkId, OnDestroyMatch);
-			} else{
-				Debug.Log ("OnClickBackToTitle.DropConnection");
-				DropConnectionRequest dropReq = new DropConnectionRequest ();
-				dropReq.networkId = (NetworkID) networkId;
-				dropReq.nodeId = (NodeID) nodeId;
-				networkLobbyManager.matchMaker.DropConnection (dropReq, OnConnectionDrop);
-
-			}
-			networkLobbyManager.StopClient ();
-			match = null;
-		}
+		cleanUpMatchAndSwitchState(State.TITLE);
 	}
 
 	void OnDestroyMatch(BasicResponse response) {
 		Debug.Log ("OnDestroyMatch()");
+		networkLobbyManager.StopClient ();
+		NetworkServer.Reset();
+		match = null;
+		switchState(nextState);
 	}
 
 	void OnConnectionDrop(BasicResponse response) {
 		Debug.Log ("OnConnectionDrop()");
+		networkLobbyManager.StopClient ();
+		NetworkServer.Reset();
+		match = null;
+		switchState(nextState);
 	}
 
-	enum State {
-		TITLE,
-		NETWORK, // LAN or Online
-		LAN, // Host or Client
-		ONLINE, // Host or Find game
-		ONLINE_HOST, // Host game
-		ONLINE_FIND, // Find game
-		LOBBY, // Lobby
-		CREDITS,
-	}
-	private void switchState(State state) {
+	private void OffAllUI() {
 		titleMenu.SetActive(false);
 		networkMenu.SetActive(false);
 		lanMenu.SetActive(false);
@@ -215,15 +212,38 @@ public class TitleScreen : MonoBehaviour {
 		onlineFindJoinGameOverlay.SetActive (false);
 		lobbyMenu.SetActive(false);
 		creditsMenu.SetActive(false);
+	}
+	private void switchState(State state) {
+		OffAllUI();
 		switch (state) {
 			case State.TITLE: titleMenu.SetActive(true); break;
 			case State.NETWORK: networkMenu.SetActive(true); break;
 			case State.LAN: lanMenu.SetActive(true); break;
-			case State.ONLINE: onlineMenu.SetActive(true); break;
+			case State.ONLINE: onlineMenu.SetActive(true); OnSwitchToOnline(); break;
 			case State.ONLINE_HOST: onlineHostMenu.SetActive(true); break;
 			case State.ONLINE_FIND: onlineFindMenu.SetActive(true); OnClickFindGame (); break;
 			case State.LOBBY: lobbyMenu.SetActive (true); break;
 			case State.CREDITS: creditsMenu.SetActive(true); break;
+		}
+	}
+
+	private void cleanUpMatchAndSwitchState(State state) {
+		if (match != null) {
+			OffAllUI();
+			// if match is active, we only switch to new state on callbacks, otherwise, they may be cancelled.
+			nextState = state;
+			if (isMatchCreator) {
+				Debug.Log ("isMatchCreator, DestroyMatch");
+				networkLobbyManager.matchMaker.DestroyMatch ((NetworkID)networkId, OnDestroyMatch);
+			} else{
+				Debug.Log ("not isMatchCreator, DropConnection");
+				DropConnectionRequest dropReq = new DropConnectionRequest ();
+				dropReq.networkId = (NetworkID) networkId;
+				dropReq.nodeId = (NodeID) nodeId;
+				networkLobbyManager.matchMaker.DropConnection (dropReq, OnConnectionDrop);
+			}
+		} else {
+			switchState(state);
 		}
 	}
 }
