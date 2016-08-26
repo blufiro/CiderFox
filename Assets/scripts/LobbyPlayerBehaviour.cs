@@ -37,8 +37,8 @@ public class LobbyPlayerBehaviour : NetworkLobbyPlayer {
 	}
 
 	public override void OnClientExitLobby() {
-		base.OnClientExitLobby ();
 		Debug.Log ("lobbyplayer.OnClientExitLobby");
+		base.OnClientExitLobby ();
 		clearUI ();
 	}
 
@@ -48,11 +48,17 @@ public class LobbyPlayerBehaviour : NetworkLobbyPlayer {
 	}
 
 	public void OnClickReadyToggle(bool value) {
+		Debug.Log ("lobbyplayer.OnClickReadyToggle: " + value);
 		if (value) {
 			SendReadyToBeginMessage ();
 		} else {
 			SendNotReadyToBeginMessage ();
 		}
+	}
+
+	public void OnDestroy() {
+		Debug.Log("lobbyplayer.OnDestroy");
+		clearUI ();
 	}
 
 	private void clearUI() {

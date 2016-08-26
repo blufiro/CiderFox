@@ -74,24 +74,29 @@ public class TitleScreen : MonoBehaviour {
 	}
 
 	public void OnClickOnline() {
+		Debug.Log ("OnClickOnline()");
 		cleanUpMatchAndSwitchState(State.ONLINE);
 		Debug.Log ("networkLobbyManager: " + networkLobbyManager);
 	}
 
 	public void OnSwitchToOnline() {
+		Debug.Log ("OnSwitchToOnline()");
 		networkLobbyManager.StartMatchMaker();
 		match = networkLobbyManager.matchMaker;
 	}
 
 	public void OnClickOnlineHost() {
+		Debug.Log ("OnClickOnlineHost()");
 		switchState (State.ONLINE_HOST);
 	}
 
 	public void OnClickOnlineFind() {
+		Debug.Log ("OnClickOnlineFind()");
 		switchState (State.ONLINE_FIND);
 	}
 
 	public void OnClickCreateGame() {
+		Debug.Log ("OnClickCreateGame()");
 		var req = new CreateMatchRequest();
 		req.name = onlineHostGameNameInput.text;
 		req.size = G.NUM_PLAYERS;
@@ -103,12 +108,14 @@ public class TitleScreen : MonoBehaviour {
 	}
 
 	void OnMatchCreate(CreateMatchResponse matchInfo) {
+		Debug.Log ("OnMatchCreate()");
 		networkLobbyManager.OnMatchCreate (matchInfo);
 		this.networkId = (long) matchInfo.networkId;
 		this.nodeId = (long) matchInfo.nodeId;
 	}
 
 	public void OnClickFindGame() {
+		Debug.Log ("OnClickFindGame()");
 		var req = new ListMatchRequest ();
 		req.pageNum = 0;
 		req.pageSize = 20;
@@ -124,8 +131,8 @@ public class TitleScreen : MonoBehaviour {
 		onlineFindGameButton.gameObject.SetActive (false);
 	}
 
-	void OnMatchList(ListMatchResponse matchList)
-	{
+	void OnMatchList(ListMatchResponse matchList) {
+		Debug.Log ("OnMatchList()");
 		onlineFindGameButton.gameObject.SetActive (true);
 		networkLobbyManager.OnMatchList (matchList);
 		if (matchList.matches.Count > 0) {
@@ -149,17 +156,20 @@ public class TitleScreen : MonoBehaviour {
 	}
 
 	public void OnClickSelectGame(MatchDesc selectedMatch) {
+		Debug.Log ("OnClickSelectGame()");
 		selectedMatchDesc = selectedMatch;
 		onlineFindJoinGameOverlay.SetActive (true);
 		onlineFindJoinGameNameText.text = selectedMatchDesc.name;
 	}
 
 	public void OnClickBackOnJoinGameOverlay() {
+		Debug.Log ("OnClickBackOnJoinGameOverlay()");
 		selectedMatchDesc = null;
 		onlineFindJoinGameOverlay.SetActive (false);
 	}
 
 	public void OnClickJoinGame() {
+		Debug.Log ("OnClickJoinGame()");
 		var req = new JoinMatchRequest();
 		req.networkId = selectedMatchDesc.networkId;
 		req.password = onlineFindPasswordInput.text;
@@ -169,6 +179,7 @@ public class TitleScreen : MonoBehaviour {
 	}
 
 	void OnMatchJoined(JoinMatchResponse matchInfo) {
+		Debug.Log ("OnMatchJoined()");
 		networkLobbyManager.OnMatchJoined (matchInfo);
 		this.networkId = (long) matchInfo.networkId;
 		this.nodeId = (long) matchInfo.nodeId;
@@ -183,6 +194,7 @@ public class TitleScreen : MonoBehaviour {
 	}
 
 	public void OnClickBackToTitle() {
+		Debug.Log ("OnClickBackToTitle()");
 		cleanUpMatchAndSwitchState(State.TITLE);
 	}
 
@@ -214,6 +226,7 @@ public class TitleScreen : MonoBehaviour {
 		creditsMenu.SetActive(false);
 	}
 	private void switchState(State state) {
+		Debug.Log("switchState: " + state);
 		OffAllUI();
 		switch (state) {
 			case State.TITLE: titleMenu.SetActive(true); break;
