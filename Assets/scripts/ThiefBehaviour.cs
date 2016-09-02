@@ -39,7 +39,7 @@ public class ThiefBehaviour : EnemyBehaviour {
 			carryOverheadBehaviour.DropCarriedItem();
 		}
 
-		G.get().gameController.OnThiefDefeat(this);
+		G.get().gameController.OnThiefDefeat(this, transform.position);
 	}
 	
 	// Update is called once per frame
