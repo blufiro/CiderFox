@@ -174,6 +174,16 @@ public class GameController : NetworkBehaviour {
 		nextAudioSource = (freeIndex + 1) % G.MAX_AUDIO_SOURCES;
 	}
 
+	public void OnThiefDefeat(ThiefBehaviour thief) {
+		if (!isServer) {
+			return;
+		}
+		var deathGob = (GameObject)Instantiate(thief.deathPrefab);
+		deathGob.transform.position = transform.position;
+		NetworkServer.Spawn(deathGob);
+		Destroy(deathGob, 5.0f);
+	}
+
 	public void OnThiefRanAway() {
 		numThiefRanAway++;
 	}

@@ -39,17 +39,17 @@ public class ThiefBehaviour : EnemyBehaviour {
 			carryOverheadBehaviour.DropCarriedItem();
 		}
 
-		var deathGob = (GameObject)Instantiate(deathPrefab);
-		deathGob.transform.position = transform.position;
-		NetworkServer.Spawn(deathGob);
-		Destroy(deathGob, 5.0f);
+		G.get().gameController.OnThiefDefeat(this);
 	}
 	
 	// Update is called once per frame
 	public override void Update() {
+		base.Update();
+
+		updateMove();
+
 		if (!isServer)
 			return;
-		base.Update();
 		switch(state) {
 			case ThiefState.LOCATE_CIDER: UpdateLocateCider(); break;
 			case ThiefState.IDLE_WHEN_NO_CIDER: UpdateIdleWhenNoCider(); break;
@@ -120,17 +120,10 @@ public class ThiefBehaviour : EnemyBehaviour {
 	private void MoveToTarget(Vector3 targetPosition, ThiefState onReachState) {
 		Vector2 toDestination = targetPosition - this.transform.position;
 		float distance = toDestination.sqrMagnitude;
-		if (distance > 0.001f) {
-			Vector2 moveVec = toDestination;
-			float speed = G.get().THIEF_MOVE_SPEED * speedMultiplier;
-			if (distance > speed * speed) {
-				toDestination.Normalize();
-				moveVec = toDestination * speed;
-			}
-			this.transform.Translate(moveVec);
-		} else {
+		if (distance < 0.001f) {
 			changeState(onReachState);
 		}
+		// actual movement is done in updateMove()
 	}
 
 	private void UpdateGrabCider() {
@@ -146,5 +139,19 @@ public class ThiefBehaviour : EnemyBehaviour {
 
 	private void Die() {
 		Destroy(gameObject);
+	}
+
+	private void updateMove() {
+		Vector2 toDestination = targetPosition - this.transform.position;
+		float distance = toDestination.sqrMagnitude;
+		if (distance > 0.001f) {
+			Vector2 moveVec = toDestination;
+			float speed = G.get().THIEF_MOVE_SPEED * speedMultiplier;
+			if (distance > speed * speed) {
+				toDestination.Normalize();
+				moveVec = toDestination * speed;
+			}
+			this.transform.Translate(moveVec);
+		}
 	}
 }
