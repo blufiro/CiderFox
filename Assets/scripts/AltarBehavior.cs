@@ -86,6 +86,7 @@ public class AltarBehavior : NetworkBehaviour, ItemSource {
 	[ClientRpc]
 	void RpcOnSendRocket() {
 		G.get().gameController.PlayAudio(sfx_altar_score);
+		animator.SetTrigger("Launch");
 	}
 
 	[ClientRpc]
